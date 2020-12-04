@@ -3,6 +3,13 @@ package com.djcps.djutils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author wyy
+ * @version 1.0
+ * @Classname TestController
+ * @date 2020/12/3 9:33
+ * @description 启动类
+ **/
 @SpringBootApplication
 public class DjutilsApplication {
 

@@ -238,7 +238,7 @@ public class ReportExcelUtil {
      * @param <T>
      * @throws Exception
      */
-    public static <T> void WriteSheetByData (OutputStream outputStream,Class model, List<T> ...datas) {
+    public static <T> void writeSheetByData (OutputStream outputStream,Class model, List<T> ...datas) {
         ExcelWriter excelWriter = null;
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
