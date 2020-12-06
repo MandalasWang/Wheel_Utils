@@ -1,5 +1,7 @@
 package com.djcps.djutils.imgutil.util;
 
+import com.djcps.djutils.base.BaseUtil;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.io.*;
@@ -10,7 +12,7 @@ import java.io.*;
  * @author wyy
  * @version 1.0
  */
-public class ImageRemarkUtil {
+public class ImageRemarkUtil implements BaseUtil {
 
 
     /**

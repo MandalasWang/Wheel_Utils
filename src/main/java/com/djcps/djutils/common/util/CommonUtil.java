@@ -18,7 +18,7 @@ import java.security.MessageDigest;
  * @date 2020/12/3 8:55
  * @description
  **/
-public class CommonUtil  {
+public class CommonUtil {
 
     /**************************************
      * 基础工具类 包含以下方法

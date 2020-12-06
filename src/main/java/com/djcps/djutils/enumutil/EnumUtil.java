@@ -1,5 +1,6 @@
 package com.djcps.djutils.enumutil;
 
+import com.djcps.djutils.base.BaseUtil;
 import com.djcps.djutils.enumutil.enums.CodeEnum;
 
 /**
@@ -8,7 +9,7 @@ import com.djcps.djutils.enumutil.enums.CodeEnum;
  * @date 2019/10/23 16:51
  * @description  枚举工具类
  **/
-public class EnumUtil {
+public class EnumUtil implements BaseUtil {
 
 
     /**

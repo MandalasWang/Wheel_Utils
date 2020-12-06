@@ -1,6 +1,7 @@
 package com.djcps.djutils.imgutil.util;
 
 
+import com.djcps.djutils.base.BaseUtil;
 import com.google.zxing.WriterException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,7 +14,7 @@ import java.io.OutputStream;
  * @date 2020/12/4 13:33
  * @description
  **/
-public class QrCodeUtil {
+public class QrCodeUtil implements BaseUtil {
 
 
 

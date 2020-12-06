@@ -1,5 +1,6 @@
 package com.djcps.djutils.httputil.util;
 
+import com.djcps.djutils.base.BaseUtil;
 import com.djcps.djutils.httputil.constant.HttpClientConstant;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -34,7 +35,7 @@ import java.util.Set;
  * @date 2020/7/17 8:21
  * @description 调用第三方服务使用Http工具
  **/
-public class HttpClientUtil {
+public class HttpClientUtil implements BaseUtil {
 
 
     private static Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);
