@@ -7,6 +7,7 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import com.djcps.djutils.base.BaseUtil;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.List;
  * 性能更加高效  导出数据更加稳定
  * 支持 64M内存1分钟内读取75M(46W行25列)
  **/
-public class ReportExcelUtil {
+public class ReportExcelUtil implements BaseUtil {
 
 
     /***************************
@@ -35,6 +36,23 @@ public class ReportExcelUtil {
      * 6、多数据集重复导出 WriteSheetByData
      * 7、模板写入并导出 writeExcelInSheetNo
      */
+
+    private static ReportExcelUtil instance;
+
+    private ReportExcelUtil(){
+
+    }
+
+    public static ReportExcelUtil getInstance(){
+        if(null == instance){
+            synchronized (ReportExcelUtil.class){
+                if(null == instance){
+                    instance = new ReportExcelUtil();
+                }
+            }
+        }
+        return instance;
+    }
 
 
     /**
