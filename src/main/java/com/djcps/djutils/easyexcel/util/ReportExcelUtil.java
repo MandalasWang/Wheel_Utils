@@ -56,6 +56,34 @@ public class ReportExcelUtil implements BaseUtil {
 
 
     /**
+     * 没有model的导出  动态模板导出
+     * @param response
+     * @param head
+     * @param data
+     * @param fileName
+     * @param sheetName
+     * @throws Exception
+     */
+    public static void dynamicNoModelWrite(HttpServletResponse response, List<List<String>> head, List<List<Object>> data,
+                                    String fileName, String sheetName) throws Exception {
+        // 头的策略
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        // 内容的策略
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+        contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        // 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
+        HorizontalCellStyleStrategy horizontalCellStyleStrategy =
+                new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
+        EasyExcel.write(getOutputStream(fileName,response))
+                .excelType(ExcelTypeEnum.XLSX).head(head).sheet(sheetName)
+                .registerWriteHandler(horizontalCellStyleStrategy)
+                //最大长度自适应 目前没有对应算法优化 建议注释不用 会出bug
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .doWrite(data);
+    }
+
+
+    /**
      * 导出 Excel ：一个 sheet，带表头.只有一个sheet 并以response流输出
      *
      * @param response  HttpServletResponse

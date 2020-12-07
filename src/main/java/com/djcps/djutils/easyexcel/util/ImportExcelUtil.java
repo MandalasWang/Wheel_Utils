@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.fastjson.JSON;
+import com.djcps.djutils.base.BaseUtil;
 import com.djcps.djutils.easyexcel.listen.ReadExcelListener;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
@@ -20,7 +21,11 @@ import java.util.Map;
  * @date 2020/11/27 14:44
  * @description  主要用于读取Excel 可以指定从第几行开始读取
  **/
-public class ImportExcelUtil {
+public class ImportExcelUtil implements BaseUtil {
+
+
+
+
 
     /*************************
      * 报表读取工具类 包含以下方法
