@@ -49,6 +49,7 @@ public class ImageRemarkUtil implements BaseUtil {
      * @param srcImgPath 源图片路径
      * @param targetPath 目标图片路径
      * @param degree 目标图片路径
+     * @description
      */
     public static void markImageByText(String logoText, InputStream srcImgPath,
                                        OutputStream targetPath,Integer degree) {

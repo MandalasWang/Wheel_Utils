@@ -12,7 +12,7 @@
 
     <groupId>com.djcps</groupId>
     <artifactId>djutils</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <name>djutils</name>
     <description>util for djcps</description>
 
@@ -91,6 +91,58 @@
     </dependencies>
 
     <build>
+        <plugins>
+
+            <!-- 生成sources源码包的插件 -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 打包JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>true</addMavenDescriptor>
+                        <index>true</index>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+
+            <resource>
+                <filtering>true</filtering>
+                <!--要到达最底层目录 -->
+                <directory>src/main/resources/${environment}</directory>
+            </resource>
+            <resource>
+                <!--解决XML资源文件在代码目录下编译的时候不拷贝问题 -->
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+
+        </resources>
 
     </build>
 

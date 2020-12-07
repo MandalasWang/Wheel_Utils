@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author wyy
@@ -45,10 +42,9 @@ public class HttpClientUtil implements BaseUtil {
      * @param url 请求路径
      * @param paramMap 请求体
      * @return
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws Exception
      */
-    public static String post(String url, Map<String, String> paramMap) throws ClientProtocolException, IOException {
+    public static String post(String url, Map<String, String> paramMap) throws Exception {
         HttpClient httpClient=null;
         try {
              httpClient = HttpClients.createDefault();
@@ -63,7 +59,7 @@ public class HttpClientUtil implements BaseUtil {
         List<NameValuePair> formParams = setHttpParams(paramMap);
         UrlEncodedFormEntity param = new UrlEncodedFormEntity(formParams, "UTF-8");
         httpPost.setEntity(param);
-        HttpResponse response = httpClient.execute(httpPost);
+        HttpResponse response = Objects.requireNonNull(httpClient).execute(httpPost);
 
         String httpEntityContent = getHttpEntityContent(response);
 
@@ -79,10 +75,9 @@ public class HttpClientUtil implements BaseUtil {
      * @param   url 请求路径
      * @param （如JSON串）
      * @return
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws Exception
      */
-    public static String post(String url, String data) throws ClientProtocolException, IOException {
+    public static String post(String url, String data) throws Exception {
         HttpClient httpClient=null;
         try {
              httpClient = HttpClients.createDefault();
@@ -95,7 +90,7 @@ public class HttpClientUtil implements BaseUtil {
         httpPost.setConfig(requestConfig);
         httpPost.setHeader("Content-Type", "text/json; charset=utf-8");
         httpPost.setEntity(new StringEntity(URLEncoder.encode(data, "UTF-8")));
-        HttpResponse response = httpClient.execute(httpPost);
+        HttpResponse response = Objects.requireNonNull(httpClient).execute(httpPost);
         String httpEntityContent = getHttpEntityContent(response);
         httpPost.abort();
         return httpEntityContent;
@@ -106,10 +101,9 @@ public class HttpClientUtil implements BaseUtil {
      *
      * @param  url 请求路径
      * @return  String
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws Exception
      */
-    public static String get(String url) throws ClientProtocolException, IOException {
+    public static String get(String url) throws Exception {
         HttpClient httpClient=null;
         try {
              httpClient = HttpClients.createDefault();
@@ -121,7 +115,7 @@ public class HttpClientUtil implements BaseUtil {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(60000).setConnectTimeout(60000).build();
         httpGet.setConfig(requestConfig);
         httpGet.setURI(URI.create(url));
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpResponse response = Objects.requireNonNull(httpClient).execute(httpGet);
         String httpEntityContent = getHttpEntityContent(response);
         httpGet.abort();
         return httpEntityContent;
@@ -133,10 +127,9 @@ public class HttpClientUtil implements BaseUtil {
      * @param  url 请求路径
      * @param paramMap
      * @return  String
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws Exception
      */
-    public static String get(String url, Map<String, String> paramMap) throws ClientProtocolException, IOException {
+    public static String get(String url, Map<String, String> paramMap) throws Exception {
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet();
         //设置请求和传输超时时间
@@ -157,10 +150,9 @@ public class HttpClientUtil implements BaseUtil {
      * @param  url 请求路径
      * @param  paramMap
      * @return String
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws Exception
      */
-    public static String put(String url, Map<String, String> paramMap) throws ClientProtocolException, IOException {
+    public static String put(String url, Map<String, String> paramMap) throws Exception {
         HttpClient httpClient=null;
         try {
              httpClient = HttpClients.createDefault();
@@ -174,7 +166,7 @@ public class HttpClientUtil implements BaseUtil {
         List<NameValuePair> formparams = setHttpParams(paramMap);
         UrlEncodedFormEntity param = new UrlEncodedFormEntity(formparams, "UTF-8");
         httpPut.setEntity(param);
-        HttpResponse response = httpClient.execute(httpPut);
+        HttpResponse response = Objects.requireNonNull(httpClient).execute(httpPut);
         String httpEntityContent = getHttpEntityContent(response);
         httpPut.abort();
         return httpEntityContent;
@@ -185,10 +177,9 @@ public class HttpClientUtil implements BaseUtil {
      *
      * @param url 请求路径
      * @return   String
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws Exception
      */
-    public static String delete(String url) throws ClientProtocolException, IOException {
+    public static String delete(String url) throws Exception {
         HttpClient httpClient=null;
         try {
              httpClient = HttpClients.createDefault();
@@ -201,7 +192,7 @@ public class HttpClientUtil implements BaseUtil {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(60000).setConnectTimeout(60000).build();
         httpDelete.setConfig(requestConfig);
         httpDelete.setURI(URI.create(url));
-        HttpResponse response = httpClient.execute(httpDelete);
+        HttpResponse response = Objects.requireNonNull(httpClient).execute(httpDelete);
         String httpEntityContent = getHttpEntityContent(response);
         httpDelete.abort();
         return httpEntityContent;
@@ -213,10 +204,9 @@ public class HttpClientUtil implements BaseUtil {
      * @param  url 请求路径
      * @param  paramMap
      * @return  String
-     * @throws ClientProtocolException
-     * @throws IOException
+
      */
-    public static String delete(String url, Map<String, String> paramMap) throws ClientProtocolException, IOException {
+    public static String delete(String url, Map<String, String> paramMap) throws Exception {
         HttpClient httpClient=null;
         try {
              httpClient = HttpClients.createDefault();
@@ -230,7 +220,7 @@ public class HttpClientUtil implements BaseUtil {
         List<NameValuePair> formparams = setHttpParams(paramMap);
         String param = URLEncodedUtils.format(formparams, "UTF-8");
         httpDelete.setURI(URI.create(url + "?" + param));
-        HttpResponse response = httpClient.execute(httpDelete);
+        HttpResponse response = Objects.requireNonNull(httpClient).execute(httpDelete);
         String httpEntityContent = getHttpEntityContent(response);
         httpDelete.abort();
         return httpEntityContent;
@@ -277,7 +267,7 @@ public class HttpClientUtil implements BaseUtil {
             httpGet.setHeader("Token",token);
             httpGet.setHeader("Timespan",timeSpan);
             // 执行请求
-            response = httpclient.execute(httpGet);
+            response = Objects.requireNonNull(httpclient).execute(httpGet);
             // 判断返回状态是否为200
             if (response.getStatusLine().getStatusCode() == HttpClientConstant.STATUS_CODE_ACCESS) {
                 resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -289,7 +279,7 @@ public class HttpClientUtil implements BaseUtil {
                 if (response != null) {
                     response.close();
                 }
-                httpclient.close();
+                Objects.requireNonNull(httpclient).close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -320,10 +310,9 @@ public class HttpClientUtil implements BaseUtil {
      *
      * @param response
      * @return  String
-     * @throws IOException
-     * @throws UnsupportedEncodingException
+     * @throws Exception
      */
-    private static String getHttpEntityContent(HttpResponse response) throws IOException, UnsupportedEncodingException {
+    private static String getHttpEntityContent(HttpResponse response) throws Exception {
         HttpEntity entity = response.getEntity();
         if (entity != null) {
             InputStream is = entity.getContent();
@@ -331,7 +320,7 @@ public class HttpClientUtil implements BaseUtil {
             String line = br.readLine();
             StringBuilder sb = new StringBuilder();
             while (line != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
                 line = br.readLine();
             }
             return sb.toString();

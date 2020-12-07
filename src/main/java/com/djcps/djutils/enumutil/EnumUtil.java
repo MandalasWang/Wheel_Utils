@@ -7,7 +7,7 @@ import com.djcps.djutils.enumutil.enums.CodeEnum;
  * @author wyy
  * @version 1.0
  * @date 2019/10/23 16:51
- * @description  枚举工具类
+ *  枚举工具类
  **/
 public class EnumUtil implements BaseUtil {
 

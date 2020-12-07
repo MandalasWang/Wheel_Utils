@@ -1,5 +1,6 @@
 package com.djcps.djutils.common.util;
 
+import com.djcps.djutils.base.BaseUtil;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,7 @@ import java.security.MessageDigest;
  * @date 2020/12/3 8:55
  * @description
  **/
-public class CommonUtil {
+public class CommonUtil implements BaseUtil {
 
     /**************************************
      * 基础工具类 包含以下方法
