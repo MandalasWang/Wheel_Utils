@@ -5,7 +5,9 @@ import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.fastjson.JSON;
 import com.djcps.djutils.base.BaseUtil;
+import com.djcps.djutils.easyexcel.listen.NoModelDataListener;
 import com.djcps.djutils.easyexcel.listen.ReadExcelListener;
+
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +100,19 @@ public class ImportExcelUtil implements BaseUtil {
     }
 
 
+    /**
+     * 简单的读 只读单sheet默认第一个sheet
+     * @author wyy
+     * @param inputStream 文件流
+     * @param clazz    实体类
+     * @return 数据源list
+     */
+    public static List<Map<T, T>> noModelRead(InputStream inputStream, String fileName){
+        NoModelDataListener noModelDataListener = new NoModelDataListener();
+        EasyExcel.read(inputStream,noModelDataListener).sheet().doRead();
+        return noModelDataListener.getList();
+
+    }
 
 
     /**

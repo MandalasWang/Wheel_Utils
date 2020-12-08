@@ -4,6 +4,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
 import com.djcps.djutils.easyexcel.constant.ReadConstant;
+import com.djcps.djutils.easyexcel.listen.base.BaseListener;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +18,12 @@ import java.util.Map;
  * @description
  **/
 @Slf4j
-public class  ReadExcelListener<T> extends AnalysisEventListener<T> {
+public class  ReadExcelListener<T> extends AnalysisEventListener<T> implements BaseListener {
 
 
     /**
-     * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
+     * 每隔5条存储数据库，实际使用中可以3000条（推荐），然后清理list ，方便内存回收
+     * 不推荐一次性读取所有并处理 这样很费内存并有很大可能性造成OOM
      */
     private static final int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
     /**
@@ -84,6 +86,11 @@ public class  ReadExcelListener<T> extends AnalysisEventListener<T> {
     public void doAfterAllAnalysed(AnalysisContext context) {
         // 这里也要保存数据，确保最后遗留的数据也存储到数据库
         log.info("所有数据解析完成！");
+    }
+
+    @Override
+    public void saveData() {
+        log.info("这里书写对解析的数据进行处理的代码！");
     }
 
 }
