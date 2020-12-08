@@ -26,12 +26,23 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> implem
      * 每隔5条存储数据库，实际使用中可以3000条（推荐），然后清理list ，方便内存回收
      * 不推荐一次性读取所有并处理 这样很费内存并有很大可能性造成OOM
      */
-    private static final int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
+    private static  int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
 
     List<Map<T, T>> list = new ArrayList<>();
 
     public List<Map<T, T>> getList() {
         return list;
+    }
+
+
+    /**
+     * 自定义读取行数一次性 读完后会对list进行清空操作
+     * 注意需求大小
+     *
+     * @param maxCount
+     */
+    public static void setBatchCount(int maxCount) {
+        BATCH_COUNT = maxCount;
     }
 
     @Override
