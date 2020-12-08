@@ -4,7 +4,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
 import com.djcps.djutils.easyexcel.constant.ReadConstant;
-import com.djcps.djutils.easyexcel.listen.base.BaseListener;
+import com.djcps.djutils.easyexcel.listen.base.BaseDataProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * @description
  **/
 @Slf4j
-public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> implements BaseListener {
+public class NoModelDataListener extends AnalysisEventListener<Map<T, T>>  {
 
     /**
      * 每隔5条存储数据库，实际使用中可以3000条（推荐），然后清理list ，方便内存回收
@@ -29,6 +29,8 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> implem
     private static  int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
 
     List<Map<T, T>> list = new ArrayList<>();
+
+    private static BaseDataProcessor listener;
 
     public List<Map<T, T>> getList() {
         return list;
@@ -42,6 +44,9 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> implem
      * @param maxCount
      */
     public static void setBatchCount(int maxCount) {
+        if (maxCount <= 1) {
+            throw new ArithmeticException("请输入大于0的行数");
+        }
         BATCH_COUNT = maxCount;
     }
 
@@ -50,6 +55,7 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> implem
         log.info("解析到一条数据:{}", JSON.toJSONString(integerStringMap));
         list.add(integerStringMap);
         if (list.size() >= BATCH_COUNT) {
+            saveData(list);
             list.clear();
         }
     }
@@ -60,8 +66,21 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> implem
     }
 
 
-    @Override
-    public void saveData() {
-        log.info("这里书写对解析的数据进行处理的代码！");
+    /**
+     * 数据保存方法传入自定义实现类并实现saveData方法
+     * @param list
+     */
+    public static void saveData(List<Map<T, T>> list) {
+        log.info("可以自定义listener实现BaseListener中的saveData方法  在这里书写对解析的数据进行处理的代码！");
+        listener.saveNoModelData(list);
+    }
+
+    /**
+     * 设置自定义入参
+     * @param baseDataProcessor
+     * @return
+     */
+    public static void setBase(BaseDataProcessor baseDataProcessor){
+        listener = baseDataProcessor;
     }
 }
