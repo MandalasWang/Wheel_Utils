@@ -8,6 +8,7 @@ import com.djcps.djutils.base.BaseUtil;
 import com.djcps.djutils.easyexcel.listen.NoModelDataListener;
 import com.djcps.djutils.easyexcel.listen.ReadExcelListener;
 
+import com.djcps.djutils.easyexcel.listen.base.BaseDataProcessor;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,14 +101,80 @@ public class ImportExcelUtil implements BaseUtil {
     }
 
 
+
     /**
-     * 简单的读 只读单sheet默认第一个sheet
+     * 无模板自定义数据处理必须实现BaseDataProcessor 加工类数据处理saveNoModelData()方法
+     *
+     * @param onceReadMaxCount  最大一次读取并处理行数
+     * @param inputStream       文件流
+     * @param baseDataProcessor 数据加工类基类
+     * @author wyy
+     */
+    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor) {
+        NoModelDataListener noModelDataListener = new NoModelDataListener();
+        NoModelDataListener.setBase(baseDataProcessor);
+        NoModelDataListener.setBatchCount(onceReadMaxCount);
+        EasyExcel.read(inputStream, noModelDataListener).sheet().doRead();
+
+    }
+
+    /**
+     * 无模板自定义数据处理必须实现BaseDataProcessor 加工类数据处理saveNoModelData()方法
+     *
+     * @param inputStream       文件流
+     * @param onceReadMaxCount  最大一次读取并处理行数
+     * @param baseDataProcessor 数据加工类基类
+     * @param headRowNumber     从第几行开始读取
+     */
+    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, int headRowNumber) {
+        NoModelDataListener noModelDataListener = new NoModelDataListener();
+        NoModelDataListener.setBase(baseDataProcessor);
+        NoModelDataListener.setBatchCount(onceReadMaxCount);
+        EasyExcel.read(inputStream, noModelDataListener).headRowNumber(headRowNumber).sheet().doRead();
+
+    }
+
+    /**
+     * 有模板自定义数据处理必须实现BaseDataProcessor 加工类数据处理saveData()方法
+     *
+     * @param onceReadMaxCount  最大一次读取并处理行数
+     * @param inputStream       文件流
+     * @param baseDataProcessor 数据加工类基类
+     * @return 数据源list
+     * @author wyy
+     */
+    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz) {
+        ReadExcelListener readExcelListener = new ReadExcelListener();
+        ReadExcelListener.setBase(baseDataProcessor);
+        ReadExcelListener.setBatchCount(onceReadMaxCount);
+        EasyExcel.read(inputStream, clazz, readExcelListener).sheet().doRead();
+    }
+
+
+    /**
+     * 有模板自定义数据处理必须实现BaseDataProcessor 加工类数据处理saveData()方法
+     *
+     * @param inputStream       文件流
+     * @param onceReadMaxCount  最大一次读取并处理行数
+     * @param baseDataProcessor 数据加工类基类
+     * @param clazz             模板
+     * @param headRowNumber     读取行数开始读
+     */
+    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz, int headRowNumber) {
+        ReadExcelListener readExcelListener = new ReadExcelListener();
+        ReadExcelListener.setBase(baseDataProcessor);
+        ReadExcelListener.setBatchCount(onceReadMaxCount);
+        EasyExcel.read(inputStream, clazz, readExcelListener).sheet().doRead();
+    }
+
+    /**
+     * 简单的无模板读取数据
      * @author wyy
      * @param inputStream 文件流
      * @param clazz    实体类
      * @return 数据源list
      */
-    public static List<Map<T, T>> noModelRead(InputStream inputStream, String fileName){
+    public static List<Map<T, T>> noModelRead(InputStream inputStream){
         NoModelDataListener noModelDataListener = new NoModelDataListener();
         EasyExcel.read(inputStream,noModelDataListener).sheet().doRead();
         return noModelDataListener.getList();
@@ -126,7 +193,6 @@ public class ImportExcelUtil implements BaseUtil {
      * 3. 直接读即可
      */
     public static <T>List<T> repeatedReadToAllSheet(InputStream inputStream, Class clazz) {
-
         ReadExcelListener<T> dataListener = new ReadExcelListener<>();
         // 读取全部sheet
         // 这里需要注意 DemoDataListener的doAfterAllAnalysed 会在每个sheet读取完毕后调用一次。然后所有sheet都会往同一个DemoDataListener里面写
