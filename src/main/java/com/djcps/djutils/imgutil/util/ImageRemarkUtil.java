@@ -26,7 +26,7 @@ public class ImageRemarkUtil implements BaseUtil {
      */
     public static void setRemarkData(float alpha, int positionWidth,
                                      int positionHeight, Font font, Color color){
-        ImgRemark.setImageMarkOptions(alpha,positionWidth,positionHeight,font,color);
+        ImgWaterRemark.setImageMarkOptions(alpha,positionWidth,positionHeight,font,color);
     }
 
 
@@ -39,7 +39,7 @@ public class ImageRemarkUtil implements BaseUtil {
      */
     public static void markImageByText(String logoText, InputStream srcImgPath,
                                        OutputStream targetPath) {
-        ImgRemark.markImageByText(logoText, srcImgPath, targetPath, null);
+        ImgWaterRemark.markImageByText(logoText, srcImgPath, targetPath, null);
     }
 
     /**
@@ -53,7 +53,7 @@ public class ImageRemarkUtil implements BaseUtil {
      */
     public static void markImageByText(String logoText, InputStream srcImgPath,
                                        OutputStream targetPath,Integer degree) {
-        ImgRemark.markImageByText(logoText, srcImgPath, targetPath, degree);
+        ImgWaterRemark.markImageByText(logoText, srcImgPath, targetPath, degree);
     }
 
 
@@ -75,7 +75,7 @@ public class ImageRemarkUtil implements BaseUtil {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ImgRemark.markImageByText(logoText, srcImgPath, outputStream, null);
+        ImgWaterRemark.markImageByText(logoText, srcImgPath, outputStream, null);
     }
 
 
@@ -98,7 +98,7 @@ public class ImageRemarkUtil implements BaseUtil {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ImgRemark.markImageByText(logoText, srcImgPath, outputStream, degree);
+        ImgWaterRemark.markImageByText(logoText, srcImgPath, outputStream, degree);
     }
 
 
@@ -120,7 +120,7 @@ public class ImageRemarkUtil implements BaseUtil {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ImgRemark.markImageByIcon(iconPath, srcImgPath, outputStream, null);
+        ImgWaterRemark.markImageByIcon(iconPath, srcImgPath, outputStream, null);
     }
 
 
@@ -143,7 +143,7 @@ public class ImageRemarkUtil implements BaseUtil {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ImgRemark.markImageByIcon(iconPath, srcImgPath, outputStream, degree);
+        ImgWaterRemark.markImageByIcon(iconPath, srcImgPath, outputStream, degree);
     }
 
     /**
@@ -155,7 +155,7 @@ public class ImageRemarkUtil implements BaseUtil {
      */
     public static void markImageByIcon(String iconPath, InputStream srcImgPath,
                                        OutputStream targetPath) {
-        ImgRemark.markImageByIcon(iconPath, srcImgPath, targetPath, null);
+        ImgWaterRemark.markImageByIcon(iconPath, srcImgPath, targetPath, null);
     }
 
 
@@ -169,7 +169,7 @@ public class ImageRemarkUtil implements BaseUtil {
      */
     public static void markImageByIcon(String iconPath, InputStream srcImgPath,
                                        OutputStream targetPath,Integer degree) {
-        ImgRemark.markImageByIcon(iconPath, srcImgPath, targetPath, degree);
+        ImgWaterRemark.markImageByIcon(iconPath, srcImgPath, targetPath, degree);
     }
 
 }

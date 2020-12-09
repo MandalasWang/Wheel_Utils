@@ -73,7 +73,7 @@ public class ImportExcelUtil implements BaseUtil {
      * 读取表头数据
      * @author wyy
      * <p>
-     * 1. 创建excel对应的实体对象 参照{@link DemoData}
+     * 1. 创建excel对应的实体对象 参照{@link }
      * <p>
      * 2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link ReadExcelListener}
      * <p>
@@ -140,7 +140,6 @@ public class ImportExcelUtil implements BaseUtil {
      * @param onceReadMaxCount  最大一次读取并处理行数
      * @param inputStream       文件流
      * @param baseDataProcessor 数据加工类基类
-     * @return 数据源list
      * @author wyy
      */
     public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz) {
@@ -171,7 +170,6 @@ public class ImportExcelUtil implements BaseUtil {
      * 简单的无模板读取数据
      * @author wyy
      * @param inputStream 文件流
-     * @param clazz    实体类
      * @return 数据源list
      */
     public static List<Map<T, T>> noModelRead(InputStream inputStream){
@@ -235,8 +233,7 @@ public class ImportExcelUtil implements BaseUtil {
      * @param clazz      读取模板
      * @param headRowNumber  读取行数
      * @param sheet    读取的sheetNo
-     * @param <T>
-     * @return
+     * @return 返回集合
      */
     private static <T> List<T> readSheet( ExcelReader excelReader,Class<T> clazz, int headRowNumber, Integer sheet) {
         ReadExcelListener<T> dataListener = new ReadExcelListener<>();
@@ -291,7 +288,6 @@ public class ImportExcelUtil implements BaseUtil {
             // 返回每条数据的键值对 表示所在的列 和所在列的值
             LOGGER.info("读取到数据:{}", JSON.toJSONString(data));
         }
-        return;
     }
 
 

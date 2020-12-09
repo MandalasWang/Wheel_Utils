@@ -10,11 +10,11 @@ import java.io.OutputStream;
 /**
  * @author wyy
  * @version 1.0
- * @Classname ImgRemark
+ * @Classname ImgWaterRemark
  * @date 2020/12/4 13:08
  * @description 图片增加水印文字、水印图片
  **/
-public class ImgRemark {
+public class ImgWaterRemark {
 
 
 
@@ -52,19 +52,19 @@ public class ImgRemark {
     public static void setImageMarkOptions(float alpha, int positionWidth,
                                            int positionHeight, Font font, Color color) {
         if (alpha > 0) {
-            ImgRemark.alpha = alpha;
+            ImgWaterRemark.alpha = alpha;
         }
         if (positionWidth != 0) {
-            ImgRemark.positionWidth = positionWidth;
+            ImgWaterRemark.positionWidth = positionWidth;
         }
         if (positionHeight != 0) {
-            ImgRemark.positionHeight = positionHeight;
+            ImgWaterRemark.positionHeight = positionHeight;
         }
         if (font != null) {
-            ImgRemark.font = font;
+            ImgWaterRemark.font = font;
         }
         if (color != null) {
-            ImgRemark.color = color;
+            ImgWaterRemark.color = color;
         }
     }
 
@@ -150,8 +150,6 @@ public class ImgRemark {
     public static void markImageByText(String logoText, InputStream srcImgPath,
                                        OutputStream targetPath, Integer degree) {
 
-        InputStream is = null;
-        OutputStream os = null;
         try {
             // 1、源图片
             Image srcImg = ImageIO.read(srcImgPath);
