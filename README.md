@@ -1,6 +1,6 @@
 # Wheel 轮子项目须知<br>
 
-https://img-blog.csdnimg.cn/20201209163112753.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjA4MzAzNg==,size_16,color_FFFFFF,t_70
+
 
 ### 1、本项目是工具包，包含所有生产使用的工具以及未使用到待使用工具类<br>
 ### 2、本项目是闲暇之余写的工具类，对于性能方面有部分是没有进行验证的
