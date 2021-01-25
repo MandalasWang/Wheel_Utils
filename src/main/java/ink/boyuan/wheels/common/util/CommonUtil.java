@@ -1,6 +1,7 @@
 package ink.boyuan.wheels.common.util;
 
 import ink.boyuan.wheels.base.BaseUtil;
+import ink.boyuan.wheels.common.enums.ThreadPoolEnum;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.util.concurrent.*;
 
 /**
  * @author wyy
@@ -61,6 +63,33 @@ public class CommonUtil implements BaseUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 建议：如何区分类型 看程序计算量
+     * 创建线程池—分CPU密集型（主要计算） IO密集型（主IO）
+     *
+     * @param poolEnum 线程池枚举类型
+     */
+    public static ExecutorService getThreadPool(ThreadPoolEnum poolEnum) {
+        int coreCount = Runtime.getRuntime().availableProcessors();
+        switch (poolEnum) {
+            case POOL_FOR_CPU_TYPE:
+                coreCount += 1;
+                break;
+            case POOL_FOR_IO_TYPE:
+                coreCount = (int) (coreCount / (1 - 0.9));
+                break;
+            default:
+                break;
+        }
+        return new ThreadPoolExecutor(coreCount,
+                coreCount,
+                5,
+                TimeUnit.SECONDS,
+                new LinkedBlockingDeque<>(),
+                Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy());
     }
 
 

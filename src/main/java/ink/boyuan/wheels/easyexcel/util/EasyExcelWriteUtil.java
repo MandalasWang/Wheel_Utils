@@ -24,7 +24,7 @@ import java.util.List;
  * 性能更加高效  导出数据更加稳定
  * 支持 64M内存1分钟内读取75M(46W行25列)
  **/
-public class ReportExcelUtil implements BaseUtil {
+public class EasyExcelWriteUtil implements BaseUtil {
 
 
     /***************************
@@ -37,17 +37,20 @@ public class ReportExcelUtil implements BaseUtil {
      * 7、模板写入并导出 writeExcelInSheetNo
      */
 
-    private static ReportExcelUtil instance;
 
-    private ReportExcelUtil(){
+    private volatile static EasyExcelWriteUtil instance;
+
+    private EasyExcelWriteUtil() {
 
     }
 
-    public static ReportExcelUtil getInstance(){
-        if(null == instance){
-            synchronized (ReportExcelUtil.class){
-                if(null == instance){
-                    instance = new ReportExcelUtil();
+    public static EasyExcelWriteUtil getInstance() {
+        //判断是否是空 第一重判断
+        if (null == instance) {
+            //加锁防止并发
+            synchronized (EasyExcelWriteUtil.class) {
+                if (null == instance) {
+                    instance = new EasyExcelWriteUtil();
                 }
             }
         }
@@ -56,16 +59,17 @@ public class ReportExcelUtil implements BaseUtil {
 
 
     /**
-     * 没有model的导出  动态模板导出
-     * @param response
-     * @param head
-     * @param data
-     * @param fileName
-     * @param sheetName
+     * 不需要对象model的导出  动态表头数据导出
+     *
+     * @param response  流
+     * @param head      头数据 一个list表示一列
+     * @param data      数据集合 一个list标识一行数据
+     * @param fileName  文件名
+     * @param sheetName sheet名称
      * @throws Exception
      */
     public static void dynamicNoModelWrite(HttpServletResponse response, List<List<String>> head, List<List<Object>> data,
-                                    String fileName, String sheetName) throws Exception {
+                                           String fileName, String sheetName) throws Exception {
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         // 内容的策略
@@ -74,13 +78,14 @@ public class ReportExcelUtil implements BaseUtil {
         // 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
         HorizontalCellStyleStrategy horizontalCellStyleStrategy =
                 new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
-        EasyExcel.write(getOutputStream(fileName,response))
+        EasyExcel.write(getOutputStream(fileName, response))
                 .excelType(ExcelTypeEnum.XLSX).head(head).sheet(sheetName)
                 .registerWriteHandler(horizontalCellStyleStrategy)
                 //最大长度自适应 目前没有对应算法优化 建议注释不用 会出bug
                 .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                 .doWrite(data);
     }
+
 
 
     /**
@@ -93,8 +98,8 @@ public class ReportExcelUtil implements BaseUtil {
      * @param model     映射实体类，Excel 模型
      * @throws Exception 异常
      */
-    public static  <T> void writeExcelByResponse(HttpServletResponse response, List<T> data,
-                               String fileName, String sheetName, Class  model) throws Exception {
+    public static <T> void writeExcelByResponse(HttpServletResponse response, List<T> data,
+                                                String fileName, String sheetName, Class model) throws Exception {
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -110,7 +115,7 @@ public class ReportExcelUtil implements BaseUtil {
                 .sheet(sheetName)
                 .registerWriteHandler(horizontalCellStyleStrategy)
                 //最大长度自适应 目前没有对应算法优化 建议注释不用 会出bug
-                 .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                 .doWrite(data);
 
     }
@@ -119,16 +124,16 @@ public class ReportExcelUtil implements BaseUtil {
     /**
      * 导出 Excel ：一个 sheet，带表头.指定两个sheet名称 直接作为response流输出
      *
-     * @param response  HttpServletResponse
-     * @param data2      数据 list，每个元素为一个 BaseRowModel
-     * @param fileName  导出的文件名
-     * @param fileName 导入文件的 sheet 名
-     * @param model     映射实体类，Excel 模型
+     * @param response HttpServletResponse
+     * @param data2    数据 list，每个元素为一个 BaseRowModel
+     * @param fileName 导出的文件名
+     * @param sheetName1 导入文件的 sheet 名
+     * @param model    映射实体类，Excel 模型
      * @throws Exception 异常
      */
     public static <T> void writeExcelComplexSheetByResponse(HttpServletResponse response, List<T> data1, List<T> data2,
-                               String fileName, String sheetName1,String sheetName2, Class model) throws Exception {
-        if(sheetName1.trim().equals(sheetName2)){
+                                                            String fileName, String sheetName1, String sheetName2, Class model) throws Exception {
+        if (sheetName1.trim().equals(sheetName2)) {
             throw new RuntimeException("请不要输入相同的sheet名称");
         }
         ExcelWriter excelWriter = EasyExcel.write(getOutputStream(fileName, response)).build();
@@ -141,19 +146,20 @@ public class ReportExcelUtil implements BaseUtil {
         excelWriter.finish();
     }
 
+
     /**
      * 导出 Excel ：一个 sheet，带表头.指定两个sheet名称 直接作为response流输出
      *
-     * @param response  HttpServletResponse
-     * @param data2      数据 list，每个元素为一个 BaseRowModel
-     * @param fileName  导出的文件名
-     * @param fileName 导入文件的 sheet 名
-     * @param model     映射实体类，Excel 模型
-     * @throws Exception 异常
+     * @param outputStream HttpServletResponse
+     * @param data1    数据 list，每个元素为一个 BaseRowModel
+     * @param sheetName2 导出的文件名
+     * @param sheetName1 导入文件的 sheet 名
+     * @param model    映射实体类，Excel 模型
+     *
      */
     public static <T> void writeExcelComplexSheet(OutputStream outputStream, List<T> data1, List<T> data2,
-                                            String sheetName1,String sheetName2, Class model) throws Exception {
-        if(sheetName1.trim().equals(sheetName2)){
+                                                  String sheetName1, String sheetName2, Class model) {
+        if (sheetName1.trim().equals(sheetName2)) {
             throw new RuntimeException("请不要输入相同的sheet名称");
         }
         ExcelWriter excelWriter = EasyExcel.write(outputStream).build();
@@ -166,18 +172,17 @@ public class ReportExcelUtil implements BaseUtil {
         excelWriter.finish();
     }
 
+
     /**
      * 导出 Excel ：一个 sheet，带表头. 输出流 简单的写入流
      *
-     * @param outputStream  OutputStream
-     * @param data      数据 list，每个元素为一个 BaseRowModel
-     * @param fileName  导出的文件名
-     * @param sheetName 导入文件的 sheet 名
-     * @param model     映射实体类，Excel 模型
-     * @throws Exception 异常
+     * @param outputStream OutputStream
+     * @param data         数据 list，每个元素为一个 BaseRowModel
+     * @param sheetName    导入文件的 sheet 名
+     * @param model        映射实体类，Excel 模型
      */
     public static <T> void writeExcelIn(OutputStream outputStream, List<T> data,
-                               String sheetName, Class model)  {
+                                        String sheetName, Class model) {
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -199,19 +204,19 @@ public class ReportExcelUtil implements BaseUtil {
     }
 
 
-
     /**
      * 重复写入多个sheetNo 并导出
-     * @param outputStream  输出流
-     * @param data  数据源list
-     * @param sheetName  sheet名
-     * @param model  导出模板类
-     * @param sheetNo 想要导出多少个sheet
-     * @param <T>
-     * @throws Exception
+     *
+     * @param outputStream 输出流
+     * @param data         数据源list
+     * @param sheetName    sheet名
+     * @param model        导出模板类
+     * @param sheetNo      想要导出多少个sheet
+     * @param <T> 入参泛型
+     *
      */
-    public static <T> void repeatedWrite (OutputStream outputStream, List<T> data,
-                                    String sheetName, Class model,Integer sheetNo) {
+    public static <T> void repeatedWrite(OutputStream outputStream, List<T> data,
+                                         String sheetName, Class model, Integer sheetNo) {
         ExcelWriter excelWriter = null;
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
@@ -253,7 +258,7 @@ public class ReportExcelUtil implements BaseUtil {
      * @param model        映射实体类，Excel 模型
      */
     public static <T> void writeExcelInSheetNo(OutputStream outputStream, List<T> data,
-                                  InputStream in,String sheetName, Class model,Integer sheetNo) {
+                                               InputStream in, String sheetName, Class model, Integer sheetNo) {
         ExcelWriter excelWriter;
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
@@ -266,7 +271,7 @@ public class ReportExcelUtil implements BaseUtil {
                 new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
         WriteSheet writeSheet = EasyExcel.writerSheet(sheetNo).sheetName(sheetName).build();
         //填写要写入的流文件  Excel文件
-        excelWriter = EasyExcel.write(outputStream,model).withTemplate(in)
+        excelWriter = EasyExcel.write(outputStream, model).withTemplate(in)
                 .registerWriteHandler(horizontalCellStyleStrategy)
                 .build();
         // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
@@ -275,16 +280,16 @@ public class ReportExcelUtil implements BaseUtil {
     }
 
 
-
     /**
      * 重复写入多个sheetNo 并导出
-     * @param outputStream  输出流
-     * @param datas  数据源list
-     * @param model  导出模板类
-     * @param <T>
-     * @throws Exception
+     *
+     * @param outputStream 输出流
+     * @param datas        数据源list
+     * @param model        导出模板类
+     * @param <T>  泛型
+     *
      */
-    public static <T> void writeSheetByData (OutputStream outputStream,Class model, List<T> ...datas) {
+    public static <T> void writeSheetByData(OutputStream outputStream, Class model, List<T>... datas) {
         ExcelWriter excelWriter = null;
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
@@ -300,7 +305,7 @@ public class ReportExcelUtil implements BaseUtil {
             excelWriter = EasyExcel.write(outputStream, model).
                     registerWriteHandler(horizontalCellStyleStrategy).build();
             // 去调用写入,这里传入sheetNo 表示循环多少次写多少个sheet
-            int i =0;
+            int i = 0;
             for (List<T> data : datas) {
                 // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样。这里注意DemoData.class 可以每次都变，我这里为了方便 所以用的同一个class 实际上可以一直变
                 WriteSheet writeSheet = EasyExcel.writerSheet(i, String.valueOf(i)).head(model).build();
@@ -317,7 +322,6 @@ public class ReportExcelUtil implements BaseUtil {
     }
 
 
-
     /**
      * 导出文件时为Writer生成OutputStream.
      *
@@ -326,8 +330,8 @@ public class ReportExcelUtil implements BaseUtil {
      * @return 响应流输出
      * @throws Exception exception
      */
-    private static OutputStream getOutputStream(String fileName,
-                                         HttpServletResponse response) throws Exception {
+    public static OutputStream getOutputStream(String fileName,
+                                               HttpServletResponse response) throws Exception {
         try {
             fileName = URLEncoder.encode(fileName, "UTF-8");
             response.setContentType("application/vnd.ms-excel");
@@ -341,7 +345,6 @@ public class ReportExcelUtil implements BaseUtil {
             throw new Exception("导出excel表格失败!", e);
         }
     }
-
 
 
 }

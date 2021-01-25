@@ -27,21 +27,13 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> {
      */
     private static int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
 
-    List<Map<T, T>> list = new ArrayList<>();
+    private List<Map<T, T>> dataList = new ArrayList<>();
 
-    public List<Map<T, T>> getList() {
-        return list;
-    }
-
-    /**
-     * 自定义实现监听数据处理方法
-     */
-    private static BaseDataProcessor listener;
     /**
      * 自定义读取行数一次性 读完后会对list进行清空操作
      * 注意需求大小
      *
-     * @param maxCount
+     * @param maxCount 一次性处理的最大行数
      */
     public static void setBatchCount(int maxCount) {
         if (maxCount <= 1) {
@@ -49,6 +41,11 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> {
         }
         BATCH_COUNT = maxCount;
     }
+
+    /**
+     * 自定义实现监听数据处理方法
+     */
+    private static BaseDataProcessor listener;
 
     /**
      * 数据保存方法传入自定义实现类并实现saveData方法
@@ -60,28 +57,32 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>> {
         listener.saveNoModelData(list);
     }
 
-    @Override
-    public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        log.info("所有数据解析完成！");
-    }
-
     /**
      * 设置自定义入参processor加工类
      *
-     * @param baseDataProcessor 加工类
+     * @param baseDataProcessor 加工基类
      */
     public static void setBase(BaseDataProcessor baseDataProcessor) {
         listener = baseDataProcessor;
     }
 
     @Override
+    public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+        log.info("所有数据解析完成！");
+    }
+
+    public List<Map<T, T>> getDataList() {
+        return dataList;
+    }
+
+    @Override
     public void invoke(Map<T, T> integerStringMap, AnalysisContext analysisContext) {
         log.info("解析到一条数据:{}", JSON.toJSONString(integerStringMap));
-        list.add(integerStringMap);
+        dataList.add(integerStringMap);
         //达到一次读取上限就进行数据保存操作推荐一次保存3000条
-        if (list.size() >= BATCH_COUNT) {
-            saveData(list);
-            list.clear();
+        if (dataList.size() >= BATCH_COUNT) {
+            saveData(dataList);
+            dataList.clear();
         }
     }
 }

@@ -3,8 +3,8 @@ package ink.boyuan.wheels.factory;
 import ink.boyuan.wheels.base.BaseUtil;
 import ink.boyuan.wheels.base.UtilEnums;
 import ink.boyuan.wheels.common.util.CommonUtil;
-import ink.boyuan.wheels.easyexcel.util.ImportExcelUtil;
-import ink.boyuan.wheels.easyexcel.util.ReportExcelUtil;
+import ink.boyuan.wheels.easyexcel.util.EasyExcelReadUtil;
+import ink.boyuan.wheels.easyexcel.util.EasyExcelWriteUtil;
 import ink.boyuan.wheels.enumutil.EnumUtil;
 import ink.boyuan.wheels.httputil.util.HttpClientUtil;
 import ink.boyuan.wheels.imgutil.util.ImageRemarkUtil;
@@ -46,10 +46,10 @@ public class BaseUtilFactory {
                 return new EnumUtil();
                 //获取报表导出工具类
             case EXCEL_WRITE_UTIL:
-                return ReportExcelUtil.getInstance();
+                return EasyExcelWriteUtil.getInstance();
                 //获取报表读取工具类
             case EXCEL_READER_UTIL:
-                return ImportExcelUtil.getInstance();
+                return EasyExcelReadUtil.getInstance();
             default:
                 throw new ClassNotFoundException();
         }
