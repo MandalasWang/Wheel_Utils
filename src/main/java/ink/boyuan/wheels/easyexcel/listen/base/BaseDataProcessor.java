@@ -1,9 +1,10 @@
 package ink.boyuan.wheels.easyexcel.listen.base;
 
-import org.apache.poi.ss.formula.functions.T;
+
 
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @author wyy
@@ -11,7 +12,7 @@ import java.util.Map;
  * @date 2020/12/8 11:07
  * 对读取数据进行处理的类 需要自定义数据处理类可以实现接口
  **/
-public interface BaseDataProcessor {
+public interface BaseDataProcessor<T> {
 
 
     /**

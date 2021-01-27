@@ -28,22 +28,7 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
      * 不推荐一次性读取所有并处理 这样很费内存并有很大可能性造成OOM
      */
     private static int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
-    /**
-     * 數據集合
-     */
-    private List<T> dataList = new ArrayList<>();
 
-
-    /**
-     * 自定义实现监听数据处理方法
-     */
-    private static BaseDataProcessor listener;
-
-
-    /**
-     * 表头集合
-     */
-    private List<Map<Integer, String>> headMapList = new ArrayList<>();
 
     /**
      * 自定义读取行数一次性 读完后会对list进行清空操作
@@ -58,9 +43,21 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
         BATCH_COUNT = maxCount;
     }
 
-    public List<Map<Integer, String>> getHeadMapList() {
-        return headMapList;
+
+    /**
+     * 數據集合
+     */
+    private List<T> dataList = new ArrayList<>();
+
+    public List<T> getDataList() {
+        return dataList;
     }
+
+    /**
+     * 自定义实现监听数据处理方法
+     */
+    private static BaseDataProcessor listener;
+
 
     /**
      * 设置自定义监听器入参
@@ -71,49 +68,24 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
         listener = baseDataProcessor;
     }
 
-    public List<T> getDataList() {
-        return dataList;
-    }
-
     /**
-     * 数据保存方法传入自定义实现类并实现saveData方法
+     * 表头集合
      */
-    private static void saveData(List list) {
-        log.info("可以自定义listener实现BaseListener中的saveData方法  在这里书写对解析的数据进行处理的代码！");
-        listener.saveData(list);
-    }
+    private List<Map<Integer, String>> headMapList = new ArrayList<>();
+
 
     /**
-     * 这个每一条数据解析都会来调用
-     *
-     * @param data    one row value. Is is same as {@link AnalysisContext#readRowHolder()}
-     * @param context 上下文
+     * 获取表头集合
+     * @return Map<Integer, String
      */
-    @Override
-    public void invoke(T data, AnalysisContext context) {
-        log.info("解析到一条数据:{}", JSON.toJSONString(data));
-        dataList.add(data);
-        // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
-        if (dataList.size() >= BATCH_COUNT) {
-            saveData(dataList);
-            // 存储完成清理 list
-            dataList.clear();
-        }
+    public List<Map<Integer, String>> getHeadMapList() {
+        return headMapList;
     }
 
-    /**
-     * 所有数据解析完成了 都会来调用
-     *
-     * @param context 上下文
-     */
-    @Override
-    public void doAfterAllAnalysed(AnalysisContext context) {
-        // 这里也要保存数据，确保最后遗留的数据也存储到数据库
-        log.info("所有数据解析完成！");
-    }
 
+    //**********************************************************************************
     /**
-     * 这里会一行行的返回头
+     * 这里会一行行的返回头 表头解析
      *
      * @param headMap 头信息
      * @param context 上下文
@@ -127,4 +99,39 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
             headMapList.clear();
         }
     }
+
+
+    /**
+     * 这个每一条数据解析都会来调用 数据解析
+     *
+     * @param data    one row value. Is is same as {@link AnalysisContext#readRowHolder()}
+     * @param context 上下文
+     */
+    @Override
+    public void invoke(T data, AnalysisContext context) {
+        log.info("解析到一条数据:{}", JSON.toJSONString(data));
+        dataList.add(data);
+        // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
+        if (dataList.size() >= BATCH_COUNT) {
+            listener.saveData(dataList);
+            // 存储完成清理 list
+            dataList.clear();
+        }
+    }
+
+
+    /**
+     * 所有数据解析完成了 都会来调用
+     *
+     * @param context 上下文
+     */
+    @Override
+    public void doAfterAllAnalysed(AnalysisContext context) {
+        // 这里也要保存数据，确保最后遗留的数据也存储到数据库
+        log.info("所有数据解析完成！");
+    }
+
+
+
+
 }

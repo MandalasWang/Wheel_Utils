@@ -3,7 +3,10 @@ package ink.boyuan.wheels.easyexcel.model;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * @author wyy
@@ -13,6 +16,9 @@ import lombok.Data;
  * @description
  **/
 @Data
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @ColumnWidth(value = 20)
 @ContentRowHeight(value = 14)
 public class ComplexHeadDemo {
@@ -27,12 +33,5 @@ public class ComplexHeadDemo {
     @ExcelProperty(value = {"主标题","出生日期"},index = 2)
     private String date;
 
-    public ComplexHeadDemo() {
-    }
 
-    public ComplexHeadDemo(int age, String name, String date) {
-        this.age = age;
-        this.name = name;
-        this.date = date;
-    }
 }

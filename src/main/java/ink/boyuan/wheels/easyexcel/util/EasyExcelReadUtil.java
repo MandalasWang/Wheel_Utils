@@ -12,8 +12,11 @@ import ink.boyuan.wheels.easyexcel.listen.base.BaseDataProcessor;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ import java.util.Map;
  * @description  主要用于读取Excel 可以指定从第几行开始读取
  **/
 public class EasyExcelReadUtil implements BaseUtil {
+
+
 
 
     /**
@@ -95,12 +100,12 @@ public class EasyExcelReadUtil implements BaseUtil {
      * @param baseDataProcessor 数据加工类基类
      * @author wyy
      */
-    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor) {
+    public static List<Map<T, T>> customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor) {
         NoModelDataListener noModelDataListener = new NoModelDataListener();
         NoModelDataListener.setBase(baseDataProcessor);
         NoModelDataListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, noModelDataListener).sheet().doRead();
-
+        return noModelDataListener.getDataList();
     }
 
     /**
@@ -111,44 +116,46 @@ public class EasyExcelReadUtil implements BaseUtil {
      * @param baseDataProcessor 数据加工类基类
      * @param headRowNumber     从第几行开始读取
      */
-    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, int headRowNumber) {
+    public static List<Map<T, T>> customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, int headRowNumber) {
         NoModelDataListener noModelDataListener = new NoModelDataListener();
         NoModelDataListener.setBase(baseDataProcessor);
         NoModelDataListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, noModelDataListener).headRowNumber(headRowNumber).sheet().doRead();
-
+        return noModelDataListener.getDataList();
     }
 
     /**
      * 有模板自定义数据处理必须实现BaseDataProcessor 加工类数据处理saveData()方法
-     *
+     * 默认读取行开始
      * @param onceReadMaxCount  最大一次读取并处理行数
      * @param inputStream       文件流
      * @param baseDataProcessor 数据加工类基类
      * @author wyy
      */
-    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz) {
+    public static List customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz) {
         ReadExcelListener readExcelListener = new ReadExcelListener();
         ReadExcelListener.setBase(baseDataProcessor);
         ReadExcelListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, clazz, readExcelListener).sheet().doRead();
+        return readExcelListener.getDataList();
     }
 
 
     /**
      * 有模板自定义数据处理必须实现BaseDataProcessor 加工类数据处理saveData()方法
-     *
+     * 自定义读取行数定义
      * @param inputStream       文件流
      * @param onceReadMaxCount  最大一次读取并处理行数
      * @param baseDataProcessor 数据加工类基类
      * @param clazz             模板
      * @param headRowNumber     读取行数开始读
      */
-    public static void customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz, int headRowNumber) {
+    public static List customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz, int headRowNumber) {
         ReadExcelListener readExcelListener = new ReadExcelListener();
         ReadExcelListener.setBase(baseDataProcessor);
         ReadExcelListener.setBatchCount(onceReadMaxCount);
-        EasyExcel.read(inputStream, clazz, readExcelListener).sheet().doRead();
+        EasyExcel.read(inputStream, clazz, readExcelListener).sheet().headRowNumber(headRowNumber).doRead();
+        return readExcelListener.getDataList();
     }
 
 
@@ -192,7 +199,7 @@ public class EasyExcelReadUtil implements BaseUtil {
      * 读全部sheet,这里注意一个sheet不能读取多次，多次读取需要重新读取文件
      * 指定sheet读取 传入0、1、2分别读取的sheet是Excel从左到右
      *
-     * @param sheetNos 输入需要读取的sheet 想要读取那个就输入哪个
+     * @param sheetNos 输入需要读取的sheet数量 想要读取多少个就输入多少
      * @author wyy
      * <p>
      * 1. 创建excel对应的实体对象 参照{@link Class}
@@ -205,11 +212,17 @@ public class EasyExcelReadUtil implements BaseUtil {
         if (headRowNumber <= 0) {
             throw new RuntimeException("请输入大于零的数字");
         }
-        ExcelReader excelReader = EasyExcel.read(inputStream).build();
         List<T> res = new ArrayList<>();
-        for (Integer sheet : sheetNos) {
-            List<T> list = readSheet(excelReader, clazz, headRowNumber, sheet);
+        if(sheetNos.length == 0){
+            ExcelReader excelReader = EasyExcel.read(inputStream).build();
+            List<T> list = readSheet(excelReader, clazz, headRowNumber, 0);
             res.addAll(list);
+        }else {
+            for (Integer sheet : sheetNos) {
+                ExcelReader excelReader = EasyExcel.read(inputStream).build();
+                List<T> list = readSheet(excelReader, clazz, headRowNumber, sheet);
+                res.addAll(list);
+            }
         }
         return res;
 
@@ -235,15 +248,28 @@ public class EasyExcelReadUtil implements BaseUtil {
 
 
     /**
-     * 多行头
+     * 多行头 表头读取
      *
      * @author wyy
      * <p>1. 创建excel对应的实体对象 参照{@link Class}
      * <p>2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link ReadExcelListener}
-     * <p>3. 设置headRowNumber参数，然后读。 这里要注意headRowNumber如果不指定， 会根据你传入的class的{@link @ExcelProperty#value()}里面的表头的数量来决定行数，
-     * 如果不传入class则默认为1.当然你指定了headRowNumber不管是否传入class都是以你传入的为准。
+     * <p>3. headRowNumber  这里设置 想要读取的表头行数 例如 默认返回1行  如果有2行表头就返回2
      */
-    public static <T> List<T> complexHeaderRead(InputStream inputStream, Class<T> clazz, int headRowNumber) {
+    public static <T> List<Map<Integer, String>> complexHeaderRead(InputStream inputStream, Class<T> clazz, int headRowNumber) {
+        ReadExcelListener<T> dataListener = getReadExcelListener(inputStream, clazz, headRowNumber);
+        return dataListener.getHeadMapList();
+    }
+
+
+    /**
+     *
+     * @param inputStream
+     * @param clazz
+     * @param headRowNumber
+     * @param <T>
+     * @return
+     */
+    private static <T> ReadExcelListener<T> getReadExcelListener(InputStream inputStream, Class<T> clazz, int headRowNumber) {
         if (headRowNumber <= 0) {
             throw new RuntimeException("请输入大于零的数字");
         }
@@ -252,10 +278,8 @@ public class EasyExcelReadUtil implements BaseUtil {
         EasyExcel.read(inputStream, clazz, dataListener).sheet()
                 // 这里可以设置1，因为头就是一行。如果多行头，可以设置其他值。不传入也可以，因为默认会根据DemoData 来解析，他没有指定头，也就是默认1行
                 .headRowNumber(headRowNumber).doRead();
-        return dataListener.getDataList();
+        return dataListener;
     }
-
-
 
 
 
