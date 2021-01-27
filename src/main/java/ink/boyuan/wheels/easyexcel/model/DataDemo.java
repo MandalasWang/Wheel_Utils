@@ -3,7 +3,10 @@ package ink.boyuan.wheels.easyexcel.model;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * @author wyy
@@ -13,6 +16,9 @@ import lombok.Data;
  * @description
  **/
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 @ColumnWidth(value = 20)
 @ContentRowHeight(value = 14)
 public class DataDemo {
@@ -28,13 +34,4 @@ public class DataDemo {
     @ExcelProperty(value = "出生日期",index = 2)
     private String date;
 
-
-    public DataDemo() {
-    }
-
-    public DataDemo(int age, String name, String date) {
-        this.age = age;
-        this.name = name;
-        this.date = date;
-    }
 }

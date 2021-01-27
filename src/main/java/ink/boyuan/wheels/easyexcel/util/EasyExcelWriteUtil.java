@@ -87,6 +87,33 @@ public class EasyExcelWriteUtil implements BaseUtil {
     }
 
 
+    /**
+     * 不需要对象model的导出  动态表头数据导出
+     *
+     * @param outputStream  流
+     * @param head      头数据 一个list表示一列
+     * @param data      数据集合 一个list标识一行数据
+     * @param fileName  文件名
+     * @param sheetName sheet名称
+     * @throws Exception
+     */
+    public static void dynamicNoModelWrite(OutputStream outputStream, List<List<String>> head, List<List<Object>> data,
+                                           String fileName, String sheetName) throws Exception {
+        // 头的策略
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        // 内容的策略
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+        contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        // 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
+        HorizontalCellStyleStrategy horizontalCellStyleStrategy =
+                new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
+        EasyExcel.write(outputStream)
+                .excelType(ExcelTypeEnum.XLSX).head(head).sheet(sheetName)
+                .registerWriteHandler(horizontalCellStyleStrategy)
+                //最大长度自适应 目前没有对应算法优化 建议注释不用 会出bug
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .doWrite(data);
+    }
 
     /**
      * 导出 Excel ：一个 sheet，带表头.只有一个sheet 并以response流输出
@@ -289,7 +316,10 @@ public class EasyExcelWriteUtil implements BaseUtil {
      * @param <T>  泛型
      *
      */
-    public static <T> void writeSheetByData(OutputStream outputStream, Class model, List<T>... datas) {
+    public static <T> void writeSheetByData(OutputStream outputStream, Class<T> model, List<T>... datas) {
+        if(datas.length < 1){
+            throw new RuntimeException("至少提供一个数据源集合");
+        }
         ExcelWriter excelWriter = null;
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
