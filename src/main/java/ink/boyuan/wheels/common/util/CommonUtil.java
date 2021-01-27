@@ -1,6 +1,5 @@
 package ink.boyuan.wheels.common.util;
 
-import ink.boyuan.wheels.base.BaseUtil;
 import ink.boyuan.wheels.common.enums.ThreadPoolEnum;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +20,7 @@ import java.util.concurrent.*;
  * @date 2020/12/3 8:55
  * @description
  **/
-public class CommonUtil implements BaseUtil {
+public class CommonUtil  {
 
     /**************************************
      * 基础工具类 包含以下方法
