@@ -58,8 +58,7 @@ class DjutilsApplicationTests {
         InputStream inputStream = new FileInputStream("D:\\work\\excel\\report.xlsx");
         BaseDataProcessorAdapter dataProcessor = new dataProcess();
         List<Map<T, T>> maps = EasyExcelReadUtil.customerProcessRead(inputStream,1,dataProcessor);
-        System.out.println(maps);
-//        dataProcessor.saveData(maps);
+
 
     }
 
