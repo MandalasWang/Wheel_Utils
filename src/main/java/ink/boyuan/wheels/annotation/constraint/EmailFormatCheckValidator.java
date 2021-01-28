@@ -24,7 +24,7 @@ public class EmailFormatCheckValidator implements ConstraintValidator<EmailForma
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         String regex = paramConfig.getEmailFormat();
-        if (Pattern.matches(regex, s)) {
+        if (!"".equals(s) && Pattern.matches(regex, s)) {
             return true;
         }
         log.info("邮件格式校验不通过");
