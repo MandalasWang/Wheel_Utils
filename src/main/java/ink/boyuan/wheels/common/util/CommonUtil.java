@@ -1,7 +1,9 @@
 package ink.boyuan.wheels.common.util;
 
 import ink.boyuan.wheels.common.enums.ThreadPoolEnum;
+import ink.boyuan.wheels.common.enums.TimeStampType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -11,6 +13,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.util.Date;
 import java.util.concurrent.*;
 
 /**
@@ -138,6 +141,28 @@ public class CommonUtil  {
         }
         InputStream inputStream = new FileInputStream(file);
         return new MockMultipartFile(file.getName(), inputStream);
+    }
+
+
+    /**
+     * 生成当前时间的时间戳
+     * @return
+     */
+    public static String getCurrentTimeStamp(TimeStampType stampType){
+        long  timeNew ;
+        switch (stampType){
+            case MILLIS_TIME_STAMP:
+                // 13位数的时间戳
+               timeNew =  System.currentTimeMillis();
+                break;
+            case SECOND_TIME_STAMP:
+                // 10位数的时间戳
+               timeNew = System.currentTimeMillis()/ 1000;
+                break;
+                default:
+                    return "";
+        }
+        return String.valueOf(timeNew);
     }
 
 
