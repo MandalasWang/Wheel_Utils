@@ -1,98 +1,16 @@
-# 在克隆本项目前须知<br>
-<font color = red>**注意**：<br>
+[[_TOC_]]
 
-### 1、本项目是工具包，包含所有生产使用的工具以及未使用到待使用工具类<br>
-### 2、克隆本项目必须经过项目管理员同意划分权限<br>
-### 3、修改本项目工具类必须增加版本以及上报项目管理员，再由项目管理员进行确认是否打包<br>
-### 4、上传的方法必须经过单元测试、性能测试(保证性能)后方可上传<br>
-### 5、修改或者增加类、接口需要修改本文档，进行注明年月日 某某 动作 内容<br>
-### 6、涉及版本的修改必须同步CHANGELOG 文档
+### 克隆须知
+> 1、本项目是工具包，包含所有生产使用的工具以及未使用到待使用工具类包<br>
+> 2、克隆本项目必须经过项目管理员同意划分权限<br>
+> 3、修改本项目工具类必须增加版本以及上报项目管理员，再由项目管理员进行确认是否打包<br>
+> 4、上传的方法必须经过单元测试、性能测试(保证性能)后方可上传<br>
+> 5、修改或者增加类、接口需要修改本文档，进行注明年月日 某某 动作 内容<br>
+> 6、涉及版本的修改必须同步CHANGELOG 文档包<br>
+> 7、author：wyy包<br>
 
 
-## 方法
-
-<br>
-common包<br>
-
-```
- /**************************************
-     * 基础工具类 包含以下方法
-     * 1、MD5加密
-     * 2、根据URL地址获取文件输入流
-     * 3、MultipartFile 转 File
-     * 4、File 转 MultipartFile
-     * 5、增加创建线程池方法
-     * ...
-     * *************************************
-     */
-```
-
-easyExcel包<br>
-
-```
-  /*************************
-     * 报表读取工具类 包含以下方法
-     * 1、读取表头 headerRead
-     * 2、简单读取单sheet 默认第一个sheet simpleReadFirstSheet
-     * 3、一次性读取所有sheet 不指定sheet repeatedReadToAllSheet
-     * 4、指定sheetNO 读取   repeatedReadBySheetNos
-     * 5、多行表头复杂表头读取  complexHeaderRead
-     * 6、无模板读取数据输出map集合 noModelRead
-     * 7、自定义读取数据并处理数据 customerProcessRead   
-     * ...
-     *
-     */
-```
-
-```
-    /***************************
-       * 报表导出
-       * 1、报表导出通过response流 单sheet writeExcelByResponse
-       * 2、多sheet导出 并指定导出的sheet名称通过response流输出 writeExcelComplexSheetByResponse
-       * 3、多sheet导出 并指定导出的sheet名称 writeExcelComplexSheet
-       * 4、单sheet导出 不通过response流 writeExcelIn
-       * 5、单数据集重复导出 repeatedWrite
-       * 6、多数据集重复导出 writeSheetByData
-       * 7、模板写入并导出 writeExcelInSheetNo
-       * 8、动态表头数据报表导出 dynamicNoModelWrite
-       */
-```
-
-枚举包
-
-```
-   传入枚举根据code获取信息
-   
-```
-
-HTTP包
-
-```
-   http请求第三方接口方法
-   1、doget方法
-   2、post方法
-   
-```
-
-图片包
-
-```
-   图片相关方法
-   1、根据输入文字输出相应的水印图片
-   2、根据水印图片输出对应的添加水印图片的图片
-   3、生成二维码图片
-   
-```
-
-注解包
-
-```
-    自定义注解相关：
-    1.时间格式注解
-    2.枚举注解
-    3、list集合校验注解
-```
-[TOC]
+___
 
 ### 一、common包
 #### 1. MD5加密
@@ -208,8 +126,25 @@ HTTP包
    //创建一个IO密集型的线程池
   ExecutorService excutorService = CommonUtil.getThreadPool(ThreadPoolEnum.POOL_FOR_IO_TYPE); 
  ```
+#### 6、获取当前时间戳
+- 功能说明： 获取当前时间戳  分别是13位和10位
 
+- 方法主体：
 
+```
+/**
+     * 生成当前时间的时间戳
+     * @return
+     */
+    public static String getCurrentTimeStamp(TimeStampType stampType)
+```
+  
+- 调用示例：
+
+```
+  String timeStamp = CommonUtil.getCurrentTimeStamp(TimeStampType.MILLIS_TIME_STAMP); 
+ ```
+___
 ### 二、easyExcel包工具示例
 
 **报表读取**
@@ -455,7 +390,7 @@ class dataProcess extends BaseDataProcessorAdapter{
         BaseDataProcessorAdapter dataProcessor = new dataProcess();
         List<Map<T, T>> maps = EasyExcelReadUtil.customerProcessRead(inputStream,1,dataProcessor);
   ``` 
-  
+___
 **报表导出**
  #### 1、简单的导出返回response
 - 功能说明：简单的导出Excel报表
@@ -752,6 +687,7 @@ EasyExcelWriteUtil.writeExcelInSheetNo(out,list,ins,"",DataDemo.class,1);
         return list;
     }
 ```
+___
 
 ### 枚举包
 
@@ -774,9 +710,56 @@ EasyExcelWriteUtil.writeExcelInSheetNo(out,list,ins,"",DataDemo.class,1);
 ```
 String typemsg = EnumUtil.getByCode(Status.class,x.getStatus().getCode()).getType())
 ```
-
+___
 ### HTTP包
+#### 1、doget方法
+- 功能说明：远程第三方api调用方式，一般用于对接第三方api使用
 
+- 方法主体：
+
+
+```
+  /**
+     * 带参的get请求
+     * @param url 请求路径
+     * @param token 权限或者签名
+     * @param timeSpan  时间戳
+     * @param o
+     * @return
+     */
+    public static String doGet(String url,String token,String timeSpan,Object o) 
+```
+  
+- 调用示例：
+
+```
+HttpClientUtil.doGet("http://youmeng.com/api/getUserById","token","时间戳",入参);
+```
+
+#### 2、dopost方法
+- 功能说明：远程第三方api调用方式，一般用于对接第三方api使用
+
+- 方法主体：
+
+
+```
+  /**
+      * 封装HTTP POST方法
+      *
+      * @param   url 请求路径
+      * @param （如JSON串）
+      * @return
+      * @throws Exception
+      */
+     public static String post(String url, String data)
+```
+  
+- 调用示例：
+
+```
+HttpClientUtil.post("http://youmeng.com/api/getUserById",入参);
+```
+___
 ### 图片工具包
 #### 1、生成水印
 
@@ -796,8 +779,6 @@ String typemsg = EnumUtil.getByCode(Status.class,x.getStatus().getCode()).getTyp
     public static void markImageByText(String logoText, InputStream srcImgPath,
                                        OutputStream targetPath)
 ```
-
-
   
 - 调用示例：
 
@@ -840,5 +821,77 @@ ImageRemarkUtil.setRemarkData(0.5f,150,150,new Font("宋体", Font.BOLD, 77),Col
 ```
 QrCodeUtil.generateQRCodeImge("www.chuyuan.ink",350,350,"D:\\work\\img\\MyBlogAddress.png");
 ```
-
+___
 ### 注解包
+#### 1、日期格式校验
+
+
+- 功能说明： 对前端传入的日期参数进行格式校验
+
+- 方法主体：
+
+
+```
+ @DateValid
+```
+
+
+  
+- 调用示例：
+
+```
+ /**
+      * 开始时间(精确到时分秒)
+      * 注：线索创建时间
+      */
+     @DateValid(format = FormatEnum.DATE_TIME)
+     private String createTimeStart;
+```
+
+#### 2、枚举校验
+
+
+- 功能说明：对枚举进行校验
+
+- 方法主体：
+
+
+```
+ @EnumValid
+```
+
+
+  
+- 调用示例：
+
+```
+  /**
+      * 线索类型（1：线索；2：线索池）
+      */
+     @EnumValid(target = ClueTypeEnum.class)
+     private String clueType;
+```
+
+#### 3、集合校验
+
+
+- 功能说明：对集合入参进行校验，判断是否为空，集合内部值是否为空
+
+- 方法主体：
+
+
+```
+ @ListNotEmpty
+```
+
+
+  
+- 调用示例：
+
+```
+/**
+     * 流程id集合
+     */
+    @ListNotEmpty
+    private List<String> ids;
+```
