@@ -1,7 +1,7 @@
-package ink.boyuan.wheels.httputil.util;
+package ink.boyuan.wheels.http.util;
 
 import ink.boyuan.wheels.base.BaseUtil;
-import ink.boyuan.wheels.httputil.constant.HttpClientConstant;
+import ink.boyuan.wheels.http.constant.HttpClientConstant;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -37,7 +37,7 @@ public class HttpClientUtil implements BaseUtil {
     private static Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);
     /**
      * 封装HTTP POST方法
-     *
+     * @author wyy
      * @param url 请求路径
      * @param paramMap 请求体
      * @return
@@ -70,7 +70,7 @@ public class HttpClientUtil implements BaseUtil {
 
     /**
      * 封装HTTP POST方法
-     *
+     * @author wyy
      * @param   url 请求路径
      * @param （如JSON串）
      * @return

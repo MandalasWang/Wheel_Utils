@@ -1,4 +1,4 @@
-package ink.boyuan.wheels.httputil.constant;
+package ink.boyuan.wheels.http.constant;
 
 /**
  * @author wyy
