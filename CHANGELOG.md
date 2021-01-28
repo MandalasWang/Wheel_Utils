@@ -76,3 +76,9 @@ easyExcel增加自定义数据处理，利用装饰器和适配器模式修改�
 
 - 修改内容：
 将版本提升至1.1.0
+
+##### 2020/1/28 15:37 wyy 提交 增加IP工具类以及PhoneFormatCheck、EmailFormatCheck注解
+- 修改说明： wyy提交 增加IP工具类以及PhoneFormatCheck、EmailFormatCheck注解
+
+- 修改内容：
+增加IP工具类以及PhoneFormatCheck、EmailFormatCheck注解
