@@ -759,6 +759,48 @@ HttpClientUtil.doGet("http://youmeng.com/api/getUserById","token","时间戳",�
 ```
 HttpClientUtil.post("http://youmeng.com/api/getUserById",入参);
 ```
+
+#### 3、getIpAddressByRequest方法
+- 功能说明：获取IP地址
+
+- 方法主体：
+
+
+```
+    /**
+       * @author wyy
+       * @param request 请求
+       * @return IP Address
+       */
+      public static String getIpAddressByRequest(HttpServletRequest request)
+```
+  
+- 调用示例：
+
+```
+IpUtil.getIpAddressByRequest(request);
+```
+
+#### 4、getIpAddressByRequest方法
+- 功能说明：获取本机IP地址
+
+- 方法主体：
+
+
+```
+    /**
+        * @author wyy
+        * @return 本机IPSocketException
+        * @throws SocketException
+        */
+       public static String getRealIp()
+```
+  
+- 调用示例：
+
+```
+IpUtil.getRealIp();
+```
 ___
 ### 图片工具包
 #### 1、生成水印
@@ -894,4 +936,52 @@ ___
      */
     @ListNotEmpty
     private List<String> ids;
+```
+
+#### 4、邮箱校验
+
+
+- 功能说明：邮箱进行统一校验
+
+- 方法主体：
+
+
+```
+ @EmailFormatCheck
+```
+
+
+  
+- 调用示例：
+
+```
+/**
+     * 流程id集合
+     */
+    @EmailFormatCheck
+    private String email;
+```
+
+#### 5、手机格式校验
+
+
+- 功能说明：手机号统一格式校验
+
+- 方法主体：
+
+
+```
+ @PhoneFormatCheck
+```
+
+
+  
+- 调用示例：
+
+```
+/**
+     * 流程id集合
+     */
+    @PhoneFormatCheck
+    private String phone;
 ```
