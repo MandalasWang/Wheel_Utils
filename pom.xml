@@ -12,7 +12,7 @@
 
     <groupId>com.djcps</groupId>
     <artifactId>djutils</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <name>djutils</name>
     <description>util for djcps</description>
 
