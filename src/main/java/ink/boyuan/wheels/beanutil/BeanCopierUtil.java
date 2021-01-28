@@ -1,4 +1,4 @@
-package ink.boyuan.wheels.util;
+package ink.boyuan.wheels.beanutil;
 
 import net.sf.cglib.beans.BeanCopier;
 
