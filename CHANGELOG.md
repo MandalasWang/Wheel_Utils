@@ -41,12 +41,6 @@ ___
 - 修改内容：第一次提交
 
 
-##### 2020/12/9 14:09 yhc提交 增加annotation包
-- 修改说明： yhc提交
-
-- 修改内容：
-增加annotation包，增加DateValid 日期校验 EnumValid枚举校验
-
 ##### 2020/1/27 09:12 wyy提交 修改easyExcel代码结构
 - 修改说明： wyy提交
 
@@ -59,11 +53,6 @@ easyExcel增加自定义数据处理，利用装饰器和适配器模式修改�
 - 修改内容：
 增加@ListNotEmpty注解，增加校验集合不能为空，并且集合里面的内容不能为空或者"" 空字符串否则报错逻辑
 
-##### 2020/1/27 15:27 dxl 提交 增加BeanCopierUtil类
-- 修改说明：dxl 提交 增加BeanCopierUtil类 bean拷贝方法
-
-- 修改内容：
-增加增加BeanCopierUtil类，对象拷贝方法copyProperties()
 
 ##### 2020/1/28 09:37 wyy 提交 修改CommonUtil类
 - 修改说明： wyy提交 common包增加获取当前时间戳方法 getCurrentTimeStamp
@@ -82,3 +71,15 @@ easyExcel增加自定义数据处理，利用装饰器和适配器模式修改�
 
 - 修改内容：
 增加IP工具类以及PhoneFormatCheck、EmailFormatCheck注解
+
+##### 2020/1/29 13:37 wyy 提交 增加金额校验自定义注解 @MoneyFormatCheck
+- 修改说明： wyy提交 增加@MoneyFormatCheck注解
+
+- 修改内容：
+增加@MoneyFormatCheck注解，保留两位小数
+
+##### 2020/1/29 14:37 wyy 提交 修改金额校验自定义注解 @MoneyFormatCheck
+- 修改说明： wyy提交 修改@MoneyFormatCheck注解
+
+- 修改内容：
+修改@MoneyFormatCheck注解，保留两位小数  最大支持百万位
