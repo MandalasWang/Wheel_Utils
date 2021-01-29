@@ -955,9 +955,7 @@ ___
 - 调用示例：
 
 ```
-/**
-     * 流程id集合
-     */
+
     @EmailFormatCheck
     private String email;
 ```
@@ -979,9 +977,28 @@ ___
 - 调用示例：
 
 ```
-/**
-     * 流程id集合
-     */
+
     @PhoneFormatCheck
     private String phone;
+```
+
+#### 6、金额格式校验
+
+
+- 功能说明：金额格式统一，最大支持百万位 小数后两位
+
+- 方法主体：
+
+
+```
+ @MoneyFormatCheck
+```
+
+
+  
+- 调用示例：
+
+```
+@MoneyFormatCheck
+    private BigDecimal money;
 ```
