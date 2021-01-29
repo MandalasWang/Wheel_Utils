@@ -24,7 +24,9 @@ public class ValidParamConfig {
     private String phoneFormat ="(\\+\\d+)?1[34578]\\d{9}$";
 
     /**
-     * 金额正则
+     * 金额正则 最大支持 999999.99 最多保留两位小数 如果小数位都为0 可不传
+     * 正确写法: 1.00  1
+     * 错误写法：1.000 9999999
      */
-    private String moneyFormat = "^(([1-9]{1}\\d*)|(0{1}))(\\.\\d{1,2})?$";
+    private String moneyFormat = "^(([1-9][0-9]{0,6})|(0{1}))(\\.\\d{1,2})?$";
 }
