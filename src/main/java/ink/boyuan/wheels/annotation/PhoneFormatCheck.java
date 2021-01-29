@@ -27,11 +27,6 @@ public @interface PhoneFormatCheck {
      */
     String message() default "手机格式错误";
 
-    /**
-     * 校验格式
-     * @return
-     */
-    String regex() default "";
 
     String value() default "";
 
