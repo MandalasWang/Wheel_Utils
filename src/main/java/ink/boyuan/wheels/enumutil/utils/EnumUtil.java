@@ -1,6 +1,5 @@
-package ink.boyuan.wheels.enumutil;
+package ink.boyuan.wheels.enumutil.utils;
 
-import ink.boyuan.wheels.base.BaseUtil;
 import ink.boyuan.wheels.enumutil.enums.CodeEnum;
 
 /**
@@ -9,7 +8,7 @@ import ink.boyuan.wheels.enumutil.enums.CodeEnum;
  * @date 2019/10/23 16:51
  *  枚举工具类
  **/
-public class EnumUtil implements BaseUtil {
+public class EnumUtil{
 
 
     /**

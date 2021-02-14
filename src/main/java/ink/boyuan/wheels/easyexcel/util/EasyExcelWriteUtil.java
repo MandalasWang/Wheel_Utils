@@ -7,7 +7,6 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import ink.boyuan.wheels.base.BaseUtil;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,7 +23,7 @@ import java.util.List;
  * 性能更加高效  导出数据更加稳定
  * 支持 64M内存1分钟内读取75M(46W行25列)
  **/
-public class EasyExcelWriteUtil implements BaseUtil {
+public class EasyExcelWriteUtil {
 
 
     /***************************

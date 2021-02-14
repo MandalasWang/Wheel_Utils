@@ -1,6 +1,5 @@
 package ink.boyuan.wheels.http.util;
 
-import ink.boyuan.wheels.base.BaseUtil;
 import ink.boyuan.wheels.http.constant.HttpClientConstant;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,7 +17,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -31,7 +29,7 @@ import java.util.*;
  * @date 2020/7/17 8:21
  * @description 调用第三方服务使用Http工具
  **/
-public class HttpClientUtil implements BaseUtil {
+public class HttpClientUtil {
 
 
     private static Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);

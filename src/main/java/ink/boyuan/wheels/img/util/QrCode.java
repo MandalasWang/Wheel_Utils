@@ -1,4 +1,4 @@
-package ink.boyuan.wheels.imgutil.util;
+package ink.boyuan.wheels.img.util;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -24,7 +24,7 @@ public class QrCode {
     /**
      * 生成二维码的方法写入输出流
      * @author wyy
-     * @param text 内容
+     * @param content 内容
      * @param width 宽度
      * @param height 高度
      * @param filePath 输出流
@@ -39,7 +39,7 @@ public class QrCode {
     /**
      * 生成二维码的方法直接输出
      * @author wyy
-     * @param text 内容
+     * @param content 内容
      * @param width 宽度
      * @param height 高度
      * @param filePath 输出流
@@ -54,7 +54,7 @@ public class QrCode {
 
     /**
      * 生成二维码的方法写入直接输出
-     * @param text 内容
+     * @param content 内容
      * @param width 宽度
      * @param height 高度
      * @param filePath 输出流
@@ -73,7 +73,7 @@ public class QrCode {
 
     /**
      * 生成二维码的方法写入输出流
-     * @param text 内容
+     * @param content 内容
      * @param width 宽度
      * @param height 高度
      * @param filePath 输出流

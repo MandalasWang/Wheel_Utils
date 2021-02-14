@@ -1,4 +1,4 @@
-package ink.boyuan.wheels.imgutil.constant;
+package ink.boyuan.wheels.img.constant;
 
 import java.awt.*;
 

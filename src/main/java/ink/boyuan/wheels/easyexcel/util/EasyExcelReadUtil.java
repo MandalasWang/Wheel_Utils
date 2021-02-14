@@ -3,11 +3,8 @@ package ink.boyuan.wheels.easyexcel.util;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.metadata.ReadSheet;
-import com.alibaba.fastjson.JSON;
-import ink.boyuan.wheels.base.BaseUtil;
 import ink.boyuan.wheels.easyexcel.listen.NoModelDataListener;
 import ink.boyuan.wheels.easyexcel.listen.ReadExcelListener;
-
 import ink.boyuan.wheels.easyexcel.listen.base.BaseDataProcessor;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
@@ -24,7 +21,7 @@ import java.util.Map;
  * @date 2020/11/27 14:44
  * @description  主要用于读取Excel 可以指定从第几行开始读取
  **/
-public class EasyExcelReadUtil implements BaseUtil {
+public class EasyExcelReadUtil {
 
 
 

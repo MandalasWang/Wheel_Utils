@@ -1,9 +1,7 @@
-package ink.boyuan.wheels.imgutil.util;
+package ink.boyuan.wheels.img.util;
 
 
-import ink.boyuan.wheels.base.BaseUtil;
 import com.google.zxing.WriterException;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -15,7 +13,7 @@ import java.io.OutputStream;
  * @date 2020/12/4 13:33
  * @description
  **/
-public class QrCodeUtil implements BaseUtil {
+public class QrCodeUtil {
 
 
 

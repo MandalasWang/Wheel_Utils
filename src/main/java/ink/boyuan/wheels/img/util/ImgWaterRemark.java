@@ -1,4 +1,4 @@
-package ink.boyuan.wheels.imgutil.util;
+package ink.boyuan.wheels.img.util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

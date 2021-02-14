@@ -1,6 +1,4 @@
-package ink.boyuan.wheels.imgutil.util;
-
-import ink.boyuan.wheels.base.BaseUtil;
+package ink.boyuan.wheels.img.util;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,7 +10,7 @@ import java.io.*;
  * @author wyy
  * @version 1.0
  */
-public class ImageRemarkUtil implements BaseUtil {
+public class ImageRemarkUtil{
 
 
     /**
