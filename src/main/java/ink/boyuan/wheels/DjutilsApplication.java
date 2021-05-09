@@ -16,5 +16,4 @@ public class DjutilsApplication {
     public static void main(String[] args) {
         SpringApplication.run(DjutilsApplication.class, args);
     }
-
 }

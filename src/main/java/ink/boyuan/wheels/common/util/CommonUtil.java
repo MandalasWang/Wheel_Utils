@@ -3,17 +3,18 @@ package ink.boyuan.wheels.common.util;
 import ink.boyuan.wheels.common.enums.ThreadPoolEnum;
 import ink.boyuan.wheels.common.enums.TimeStampType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
-import java.util.Date;
 import java.util.concurrent.*;
 
 /**
@@ -23,7 +24,7 @@ import java.util.concurrent.*;
  * @date 2020/12/3 8:55
  * @description
  **/
-public class CommonUtil  {
+public class CommonUtil {
 
     /**************************************
      * 基础工具类 包含以下方法
@@ -37,9 +38,10 @@ public class CommonUtil  {
 
     /**
      * md5 加密算法
-     * @author wyy
+     *
      * @param s
      * @return
+     * @author wyy
      */
     public static String md5(String s) {
 
@@ -97,9 +99,10 @@ public class CommonUtil  {
 
     /**
      * 获取URL地址获取文件输入流
-     * @author wyy
+     *
      * @param destUrl 输入URL地址
      * @return 返回输入流
+     * @author wyy
      */
     public static InputStream saveToFile(String destUrl) {
         HttpURLConnection httpUrl;
@@ -117,12 +120,13 @@ public class CommonUtil  {
 
     /**
      * MultipartFile 转 File
+     *
      * @param file
      * @return
      * @throws IOException
      */
     public static File changeMutiFileToFile(MultipartFile file) throws IOException {
-        if(null == file || file.isEmpty() ){
+        if (null == file || file.isEmpty()) {
             throw new RuntimeException("无法解析的文件类型或空文件");
         }
         return file.getResource().getFile();
@@ -131,12 +135,13 @@ public class CommonUtil  {
 
     /**
      * 将file 转 MultipartFile
+     *
      * @param file
      * @return
      * @throws IOException
      */
     public static MultipartFile changeFileToMultipartFile(File file) throws IOException {
-        if(null == file){
+        if (null == file) {
             throw new RuntimeException("无法解析的文件类型或空文件");
         }
         InputStream inputStream = new FileInputStream(file);
@@ -146,25 +151,68 @@ public class CommonUtil  {
 
     /**
      * 生成当前时间的时间戳
+     *
      * @return
      */
-    public static String getCurrentTimeStamp(TimeStampType stampType){
-        long  timeNew ;
-        switch (stampType){
+    public static String getCurrentTimeStamp(TimeStampType stampType) {
+        long timeNew;
+        switch (stampType) {
             case MILLIS_TIME_STAMP:
                 // 13位数的时间戳
-               timeNew =  System.currentTimeMillis();
+                timeNew = System.currentTimeMillis();
                 break;
             case SECOND_TIME_STAMP:
                 // 10位数的时间戳
-               timeNew = System.currentTimeMillis()/ 1000;
+                timeNew = System.currentTimeMillis() / 1000;
                 break;
-                default:
-                    return "";
+            default:
+                return "";
         }
         return String.valueOf(timeNew);
     }
 
 
+    /**
+     * 获取ip
+     *
+     * @param request
+     * @return
+     */
+    public static String getIpAddr(HttpServletRequest request) {
+        String ipAddress = null;
+        try {
+            ipAddress = request.getHeader("x-forwarded-for");
+            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                ipAddress = request.getHeader("Proxy-Client-IP");
+            }
+            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                ipAddress = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                ipAddress = request.getRemoteAddr();
+                if (ipAddress.equals("127.0.0.1")) {
+                    // 根据网卡取本机配置的IP
+                    InetAddress inet = null;
+                    try {
+                        inet = InetAddress.getLocalHost();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    ipAddress = inet.getHostAddress();
+                }
+            }
+            // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+            if (ipAddress != null && ipAddress.length() > 15) {
+                // "***.***.***.***".length()
+                // = 15
+                if (ipAddress.indexOf(",") > 0) {
+                    ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+                }
+            }
+        } catch (Exception e) {
+            ipAddress = "";
+        }
+        return ipAddress;
+    }
 
 }

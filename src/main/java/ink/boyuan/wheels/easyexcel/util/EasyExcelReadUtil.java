@@ -178,7 +178,7 @@ public class EasyExcelReadUtil {
      * <p>
      * 3. 直接读即可
      */
-    public static <T> List<T> repeatedReadToAllSheet(InputStream inputStream, Class clazz) {
+    public static <T> List<T> repeatedReadToAllSheet(InputStream inputStream, Class<T> clazz) {
 
         ReadExcelListener<T> dataListener = new ReadExcelListener<>();
         // 读取全部sheet
@@ -257,9 +257,9 @@ public class EasyExcelReadUtil {
 
     /**
      *
-     * @param inputStream
-     * @param clazz
-     * @param headRowNumber
+     * @param inputStream 输入流
+     * @param clazz 模板类
+     * @param headRowNumber 开始读取行数
      * @param <T>
      * @return
      */
