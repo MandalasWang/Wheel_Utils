@@ -1,6 +1,9 @@
 package ink.boyuan.wheels;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
 import ink.boyuan.wheels.easyexcel.listen.BaseDataProcessorAdapter;
+import ink.boyuan.wheels.easyexcel.listen.ReadExcelListener;
 import ink.boyuan.wheels.easyexcel.model.ComplexHeadDemo;
 import ink.boyuan.wheels.easyexcel.model.DataDemo;
 import ink.boyuan.wheels.easyexcel.util.EasyExcelReadUtil;
@@ -38,35 +41,38 @@ class DjutilsApplicationTests {
     }
 
     @Test
-    void test() throws FileNotFoundException {
-        List<ComplexHeadDemo> list = new CopyOnWriteArrayList();
-        list.add( new ComplexHeadDemo().setAge(1).setDate("2020-01-21").setName("小明"));
-        list.add( new ComplexHeadDemo().setAge(2).setDate("2020-02-21").setName("小红"));
-        list.add( new ComplexHeadDemo().setAge(3).setDate("2020-03-21").setName("小花"));
-        OutputStream outputStream = new FileOutputStream("D:\\work\\excel\\repeat2.xlsx");
-        EasyExcelWriteUtil.repeatedWrite(outputStream,list,"",ComplexHeadDemo.class,2);
-//        InputStream inputStream = new FileInputStream("D:\\work\\excel\\report.xlsx");
-//        //List<Map<T, T>> maps = EasyExcelReadUtil.noModelRead(inputStream);
-//
-//        List<DataDemo> dataDemos = EasyExcelReadUtil.repeatedReadToAllSheet(inputStream, DataDemo.class);
-//        System.out.println(dataDemos);
+    void test() throws Exception {
+        List<DataDemo> list = new CopyOnWriteArrayList();
+        list.add( new DataDemo().setAge(1).setName("小明").setDate("2020-01-21"));
+        list.add( new DataDemo().setAge(2).setName("小红").setDate("2020-02-21"));
+        list.add( new DataDemo().setAge(3).setName("小花").setDate("2020-03-21"));
+        OutputStream outputStream = new FileOutputStream("D:\\report1.xlsx");
+        EasyExcelWriteUtil.writeExcel(outputStream,list,"111","1",DataDemo.class);
+        InputStream inputStream = new FileInputStream("D:\\report1.xlsx");
+        //List<Map<T, T>> maps = EasyExcelReadUtil.noModelRead(inputStream);
+        ReadExcelListener dataDemoReadExcelListener = new ReadExcelListener();
+        EasyExcel.read(inputStream, DataDemo.class,dataDemoReadExcelListener).sheet().doRead();
+        List<Map<Integer, String>> headMapList = dataDemoReadExcelListener.getHeadMapList();
+        System.out.println(headMapList);
+        List<T> dataList = dataDemoReadExcelListener.getDataList();
+        System.out.println(dataList);
+
     }
 
 
     @Test
     void testComplexTitle() throws FileNotFoundException {
-        InputStream inputStream = new FileInputStream("D:\\work\\excel\\report.xlsx");
+        InputStream inputStream = new FileInputStream("D:\\report1.xlsx");
         List<Map<T, T>> maps = EasyExcelReadUtil.noModelRead(inputStream);
         System.out.println(maps);
     }
 
     @Test
     void testCustomer() throws FileNotFoundException {
-        InputStream inputStream = new FileInputStream("D:\\work\\excel\\report.xlsx");
+        InputStream inputStream = new FileInputStream("D:\\report1.xlsx");
         BaseDataProcessorAdapter dataProcessor = new dataProcess();
         List<Map<T, T>> maps = EasyExcelReadUtil.customerProcessRead(inputStream,1,dataProcessor);
-
-
+        dataProcessor.saveData(maps);
     }
 
     @Test

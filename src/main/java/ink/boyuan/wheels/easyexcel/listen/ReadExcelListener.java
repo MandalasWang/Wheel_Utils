@@ -19,8 +19,19 @@ import java.util.Map;
  **/
 @Slf4j
 public class ReadExcelListener<T> extends AnalysisEventListener<T> {
+    /**
+     * 自定义实现监听数据处理方法
+     */
+    private BaseDataProcessor listener;
 
 
+    public ReadExcelListener(){
+
+    }
+
+    public ReadExcelListener(BaseDataProcessor listener){
+        this.listener = listener;
+    }
 
 
     /**
@@ -29,6 +40,7 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
      */
     private static int BATCH_COUNT = ReadConstant.MAX_READ_COUNTS;
 
+    private static int HEAD_COUNT = ReadConstant.MAX_HEAD_READ_COUNTS;
 
     /**
      * 自定义读取行数一次性 读完后会对list进行清空操作
@@ -53,20 +65,7 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
         return dataList;
     }
 
-    /**
-     * 自定义实现监听数据处理方法
-     */
-    private static BaseDataProcessor listener;
 
-
-    /**
-     * 设置自定义监听器入参
-     *
-     * @param baseDataProcessor 加工类基类
-     */
-    public static void setBase(BaseDataProcessor baseDataProcessor) {
-        listener = baseDataProcessor;
-    }
 
     /**
      * 表头集合
@@ -95,8 +94,8 @@ public class ReadExcelListener<T> extends AnalysisEventListener<T> {
         log.info("解析到一条头数据:{}", JSON.toJSONString(headMap));
         headMapList.add(headMap);
         //达到一次读取上限就进行数据保存操作推荐一次保存3000条
-        if (headMapList.size() >= BATCH_COUNT) {
-            headMapList.clear();
+        if (headMapList.size() >= HEAD_COUNT) {
+            throw new RuntimeException("表头列过多，建议读取不超过200列的表头");
         }
     }
 

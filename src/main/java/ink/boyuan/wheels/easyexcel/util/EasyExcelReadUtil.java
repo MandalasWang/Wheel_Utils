@@ -95,8 +95,7 @@ public class EasyExcelReadUtil {
      * @author wyy
      */
     public static List<Map<T, T>> customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor) {
-        NoModelDataListener noModelDataListener = new NoModelDataListener();
-        NoModelDataListener.setBase(baseDataProcessor);
+        NoModelDataListener noModelDataListener = new NoModelDataListener(baseDataProcessor);
         NoModelDataListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, noModelDataListener).sheet().doRead();
         return noModelDataListener.getDataList();
@@ -111,8 +110,7 @@ public class EasyExcelReadUtil {
      * @param headRowNumber     从第几行开始读取
      */
     public static List<Map<T, T>> customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, int headRowNumber) {
-        NoModelDataListener noModelDataListener = new NoModelDataListener();
-        NoModelDataListener.setBase(baseDataProcessor);
+        NoModelDataListener noModelDataListener = new NoModelDataListener(baseDataProcessor);
         NoModelDataListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, noModelDataListener).headRowNumber(headRowNumber).sheet().doRead();
         return noModelDataListener.getDataList();
@@ -127,8 +125,7 @@ public class EasyExcelReadUtil {
      * @author wyy
      */
     public static List customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz) {
-        ReadExcelListener readExcelListener = new ReadExcelListener();
-        ReadExcelListener.setBase(baseDataProcessor);
+        ReadExcelListener readExcelListener = new ReadExcelListener(baseDataProcessor);
         ReadExcelListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, clazz, readExcelListener).sheet().doRead();
         return readExcelListener.getDataList();
@@ -145,8 +142,7 @@ public class EasyExcelReadUtil {
      * @param headRowNumber     读取行数开始读
      */
     public static List customerProcessRead(InputStream inputStream, int onceReadMaxCount, BaseDataProcessor baseDataProcessor, Class clazz, int headRowNumber) {
-        ReadExcelListener readExcelListener = new ReadExcelListener();
-        ReadExcelListener.setBase(baseDataProcessor);
+        ReadExcelListener readExcelListener = new ReadExcelListener(baseDataProcessor);
         ReadExcelListener.setBatchCount(onceReadMaxCount);
         EasyExcel.read(inputStream, clazz, readExcelListener).sheet().headRowNumber(headRowNumber).doRead();
         return readExcelListener.getDataList();
@@ -183,7 +179,7 @@ public class EasyExcelReadUtil {
         ReadExcelListener<T> dataListener = new ReadExcelListener<>();
         // 读取全部sheet
         // 这里需要注意 DemoDataListener的doAfterAllAnalysed 会在每个sheet读取完毕后调用一次。然后所有sheet都会往同一个DemoDataListener里面写
-        EasyExcel.read(inputStream, clazz, dataListener).doReadAll();
+        EasyExcel.read(inputStream, clazz, dataListener).sheet().doRead();
         return dataListener.getDataList();
 
     }

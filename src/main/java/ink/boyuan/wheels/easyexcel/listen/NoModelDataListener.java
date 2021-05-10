@@ -21,6 +21,24 @@ import java.util.Map;
 public class NoModelDataListener extends AnalysisEventListener<Map<T, T>>  {
 
     /**
+     * 自定义实现监听数据处理方法
+     */
+    private BaseDataProcessor listener;
+
+
+    public NoModelDataListener(){
+
+    }
+
+    /**
+     * 设置自定义数据加工强化器
+     * @param listener
+     */
+    public NoModelDataListener(BaseDataProcessor listener){
+        this.listener = listener;
+    }
+
+    /**
      * 最大一次处理条数，实际使用中可以3000条（推荐），然后清理list ，方便内存回收
      * 不推荐一次性读取所有并处理 这样很费内存并有很大可能性造成OOM
      */
@@ -31,10 +49,6 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>>  {
      */
     private List<Map<T, T>> dataList = new ArrayList<>();
 
-    /**
-     * 自定义实现监听数据处理方法
-     */
-    private static BaseDataProcessor listener;
 
 
     /**
@@ -50,15 +64,6 @@ public class NoModelDataListener extends AnalysisEventListener<Map<T, T>>  {
         BATCH_COUNT = maxCount;
     }
 
-
-    /**
-     * 设置自定义入参processor加工类
-     *
-     * @param baseDataProcessor 加工基类
-     */
-    public static void setBase(BaseDataProcessor baseDataProcessor) {
-        listener = baseDataProcessor;
-    }
 
     public List<Map<T, T>> getDataList() {
         return dataList;
