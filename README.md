@@ -144,6 +144,25 @@ ___
 ```
   String timeStamp = CommonUtil.getCurrentTimeStamp(TimeStampType.MILLIS_TIME_STAMP); 
  ```
+
+#### 7、获取当前浏览器指纹
+- 功能说明：获取当前用户登录的浏览器信息 主要是IP和useragent
+
+-方法主体：
+
+```$xslt
+ /**
+     * 获取ip
+     *
+     * @param request
+     * @return
+     */
+    public static String getIpAddr(HttpServletRequest request) {}
+```
+- 调用示例
+```$xslt
+   String ipaddress = CommonUtil.getIpAddr(request);
+```
 ___
 ### 二、easyExcel包工具示例
 
