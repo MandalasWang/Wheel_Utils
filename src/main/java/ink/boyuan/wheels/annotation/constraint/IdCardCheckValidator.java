@@ -1,14 +1,18 @@
 package ink.boyuan.wheels.annotation.constraint;
 
 import ink.boyuan.wheels.annotation.IdFormatCheck;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 身份证校验枚举
  * @author wyy
  */
+@Slf4j
 public class IdCardCheckValidator implements ConstraintValidator<IdFormatCheck, String> {
 
 
@@ -19,9 +23,10 @@ public class IdCardCheckValidator implements ConstraintValidator<IdFormatCheck, 
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        boolean a = s.matches("^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$");
-        boolean b = s.matches("^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}$");
-        if(a || b){
+        String pattern = "\\\\d{17}[\\\\d|x]|\\\\d{15}";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(s);
+        if(m.matches()){
             return true;
         }
         return false;
