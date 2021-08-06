@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -301,6 +302,43 @@ public class EasyExcelWriteUtil {
             }
         }
     }
+
+
+    public static <T> void repeatedWrite(String fileName,String sheetName,OutputStream outputStream,List<List<String>> head){
+        // 头的策略
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        // 内容的策略
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+        contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        // 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
+        HorizontalCellStyleStrategy horizontalCellStyleStrategy =
+                new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
+        // 方法1 如果写到同一个sheet
+        ExcelWriter excelWriter = null;
+        try {
+            //动态表头写
+            excelWriter = EasyExcel.write(outputStream)
+                    .excelType(ExcelTypeEnum.XLSX).head(head)
+                    .build();
+            // 这里注意 如果同一个sheet只要创建一次
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName) .registerWriteHandler(horizontalCellStyleStrategy)
+                    //最大长度自适应 目前没有对应算法优化 建议注释不用 会出bug
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).build();
+            // 去调用写入,这里我调用了五次，实际使用时根据数据库分页的总的页数来
+            for (int i = 0; i < 5; i++) {
+                // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
+                List<List<Object>> data = new ArrayList<>();
+                excelWriter.write(data, writeSheet);
+            }
+        } finally {
+            // 千万别忘记finish 会帮忙关闭流
+            if (excelWriter != null) {
+                excelWriter.finish();
+            }
+        }
+
+    }
+
 
 
     /**
